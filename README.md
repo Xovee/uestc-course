@@ -1,5 +1,4 @@
-这里可以添加一个 banner
-可以用 www.canva.cn 来制作，似乎挺有趣，我在研究
+<p align='center'><img src='./6-仓库资源/repo-banner.png'></p>
 
 # 介绍
 
