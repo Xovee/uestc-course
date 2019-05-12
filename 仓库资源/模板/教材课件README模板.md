@@ -15,6 +15,8 @@
 
 # 在线资源
 
-资源名|作者|最近更新时间|链接|备注
+资源名|作者|最近更新时间|备注
 ---|---|---|---|---
-神经网络与深度学习-简体中文翻译版|Xovee|2019年5月12日|https://blog.csdn.net/xovee/article/details/81384670
+[百度文库-XXX](https://wenku.baidu.com/)|作者-1|2019年5月12日
+[百度网盘-XXX](https://pan.baidu.com/)|作者-2|1956年9月29日|密码：UESTC
+[知乎-XXX](https://www.zhihu.com/)|作者-3|2018年5月12日
