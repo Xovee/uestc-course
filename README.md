@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-<p align='center'><img src='./仓库资源/repo-banner.png'></p> 
-=======
-<p align='center'><img src='./仓库资源/repo-banner.png'></p>ni hao 
->>>>>>> e252908934978ca372c718f2d9a1c9a4a29b69c0
+<p align='center'><img src='./仓库资源/repo-banner.png'></p>
 
 # 内容
 
