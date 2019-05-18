@@ -8,7 +8,7 @@
 [![Issues](https://img.shields.io/github/issues/Xovee/uestc-course.svg)]()
 ![GitHub pull requests](https://img.shields.io/github/issues-pr/Xovee/uestc-course.svg)
 
-## 课程目录
+## 课程目录 
 
 **[课程目录](./课程目录/)** 的内容为电子科技大学所开设的各类课程，以一个课程一个文件夹为组织方式；课程文件夹下划分“复习资料”、“历年试题”、“作业”、“教材”等几个部分。
 
