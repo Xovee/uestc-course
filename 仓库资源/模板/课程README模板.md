@@ -14,7 +14,7 @@
 >
 > \[点击该链接，下载本文件夹所有内容\](https://xovee.github.io/gitzip/?https://github.com/Xovee/uestc-course/tree/master/课程目录/微积分)
 
-## 相关课程
+## 相关课程（可选）
 
 （此处描述与本课程相关的其他课程，包括但不限于本课程的历史课程名，内容相似的课程文件夹超链接等。）
 
