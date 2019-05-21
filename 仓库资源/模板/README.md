@@ -16,3 +16,7 @@
 - [考研模板（待添加）]()
   - [专业课模板（待添加）]()
   - [学院模板（待添加)]()
+
+模板下载：
+
+- [点击链接，下载所有模板](https://xovee.github.io/gitzip/?https://github.com/Xovee/uestc-course/tree/master/仓库资源/模板)
