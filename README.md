@@ -1,4 +1,4 @@
-<p align='center'><img src='./仓库资源/repo-banner.png'></p>
+<p align='center'><img src='./仓库资源/img/repo-banner.png'></p>
 
 # 内容
 
