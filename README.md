@@ -4,6 +4,13 @@
 
 本仓库的内容包括电子科技大学的各类课程复习资料及考研复习资料等，本仓库为非营利、永久免费的开源项目，仓库之目的即推动知识传播、提高资源质量、减少获取成本、促进教育公平，让我电学子在备考、复习之时不必再苦寻资料。仓库内容之充实全凭网友贡献，望各位读者在有所获的同时，能积极上传资源、完善资源，使仓库可良性发展。如诸君对仓库有任何改进意见，还请不吝赐教。
 
+[![Stars](https://img.shields.io/github/stars/Xovee/uestc-course.svg?label=Stars&style=social)](https://github.com/Xovee/uestc-course/stargazers)
+[![Forks](https://img.shields.io/github/forks/Xovee/uestc-course.svg?label=Forks&style=social)](https://github.com/Xovee/uestc-course/network/members)
+[![Build](https://travis-ci.org/USTC-Resource/USTC-Course.svg?branch=master)](https://travis-ci.org/USTC-Resource/USTC-Course?branch=master)
+[![Build](https://travis-ci.org/Xovee/uestc-course.svg?branch=master)](https://travis-ci.org/Xovee/uestc-course?branch=master)
+[![repo-size](https://img.shields.io/github/repo-size/Xovee/uestc-course.svg)]()
+[![License](https://i.creativecommons.org/l/by-nc-sa/4.0/80x15.png)](http://creativecommons.org/licenses/by-nc-sa/4.0/)
+
 ## 课程目录
 
 **[课程目录](./课程目录/)** 的内容为电子科技大学所开设的各类课程，以一个课程一个文件夹为组织方式；课程文件夹下划分“复习资料”、“历年试题”、“作业”、“教材课件”等几个部分。
@@ -42,4 +49,4 @@
 
 我正在准备具体的内容，例如知识版权保护、隐私问题、格式问题等等，如果你对本仓库感兴趣，或者有任何问题，欢迎与我们联系：uestc-course@outlook.com
 
-<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="知识共享许可协议" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />本仓库的内容默认采用<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a>进行许可，有特别说明的除外。
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="知识共享许可协议" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />本仓库的内容默认采用<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a>进行许可，有特别说明的除外。使用者可以对本创作进行转载、节选、混编、二次创作，但不得运用于商业目的，且使用时须进行署名，采用本创作的内容必须同样采用本协议进行授权。
