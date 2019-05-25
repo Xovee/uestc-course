@@ -1,7 +1,5 @@
 <p align='center'><img src='./仓库资源/img/repo-banner.png'></p>
 
-# 介绍
-
 本仓库的内容包括电子科技大学的各类课程复习资料及考研复习资料等，本仓库为非营利、永久免费的开源项目，仓库之目的即推动知识传播、提高资源质量、减少获取成本、促进教育公平，让我电学子在备考、复习之时不必再苦寻资料。仓库内容之充实全凭网友贡献，望各位读者在有所获的同时，能积极上传资源、完善资源，使仓库可良性发展。如诸君对仓库有任何改进意见，还请不吝赐教。
 
 [![Stars](https://img.shields.io/github/stars/Xovee/uestc-course.svg)](https://github.com/Xovee/uestc-course/stargazers)
@@ -48,4 +46,4 @@
 
 我正在准备具体的内容，例如知识版权保护、隐私问题、格式问题等等，如果你对本仓库感兴趣，或者有任何问题，欢迎与我们联系：uestc-course@outlook.com
 
-<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="知识共享许可协议" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />本仓库的内容默认采用<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a>进行许可，有特别说明的除外。这意味着您可以对本仓库中所包含的资源进行复制、发行、修改和创作等，但不得用于商业性目的，在使用时须进行署名，且以相同或兼容的协议进行许可。
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="知识共享许可协议" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />本仓库的资源默认采用<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a>进行许可，有特别说明的除外。这意味着您可以对本仓库中所包含的资源进行复制、发行、修改和创作等，但不得用于商业性目的，在使用时须进行署名，且以相同或兼容的协议进行许可。
