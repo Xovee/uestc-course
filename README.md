@@ -16,11 +16,11 @@
 
 [**使用指南**](./仓库资源/使用指南.md) 中介绍了多种仓库使用方法，包括：浏览器搜索、文件查找、资源下载、仓库 Clone、提交 Issue 等。
 
-## 贡献方法（构建中）
+## 贡献方法
 
 [**贡献指南**](./仓库资源/贡献指南.md) 中介绍了各种为仓库做出贡献的方法，包括：新增资源、完善资源、提出改进意见和加入项目组等。
 
-## 资源完善计划
+## 资源完善计划（构建中）
 
 为了使已有资源的质量得到改善，**[资源完善计划](./仓库资源/资源完善计划.md)** 中介绍了各种资源完善计划，例如：资源整理、资源格式转换等。
 
@@ -28,7 +28,7 @@
 
 一个简要介绍，及一个 .md 文件超链接，该文件包含具体的贡献者名单
 
-[贡献者名单](./仓库资源/贡献者名单.md)
+[**贡献者名单**](./仓库资源/贡献者名单.md)
 
 ## 其余事项
 
@@ -42,4 +42,4 @@
 
 我正在准备具体的内容，例如知识版权保护、隐私问题、格式问题等等，如果你对本仓库感兴趣，或者有任何问题，欢迎与我们联系：uestc-course@outlook.com
 
-<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="知识共享许可协议" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />本仓库的内容默认采用<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a>进行许可，有特别说明的除外。
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="知识共享许可协议" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />本仓库的资源默认采用<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a>进行许可，有特别说明的除外。
