@@ -6,7 +6,7 @@
 
 [![Stars](https://img.shields.io/github/stars/Xovee/uestc-course.svg)](https://github.com/Xovee/uestc-course/stargazers)
 [![Forks](https://img.shields.io/github/forks/Xovee/uestc-course.svg)](https://github.com/Xovee/uestc-course/network/members)
-[![repo-size](https://img.shields.io/github/repo-size/Xovee/uestc-course.svg)]()
+![GitHub repo size](https://img.shields.io/github/repo-size/Xovee/uestc-course.svg)
 [![Issues](https://img.shields.io/github/issues/Xovee/uestc-course.svg)]()
 ![GitHub pull requests](https://img.shields.io/github/issues-pr/Xovee/uestc-course.svg)
 
