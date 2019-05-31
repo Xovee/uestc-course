@@ -1,18 +1,8 @@
-# 具体课程名，例如：微积分
+# 具体课程名，例如：网络计算模式
 
 课程介绍。
 
-## 下载
-
-[点击该链接，下载本文件夹所有内容](https://xovee.github.io/gitzip/?https://github.com/Xovee/uestc-course/tree/master/课程目录/[课程名])
-
-**请将上面链接中方括号内中的课程名替换为真实的课程名**，例如：
-
-> \[点击该链接，下载本文件夹所有内容\](https://xovee.github.io/gitzip/?https://github.com/Xovee/uestc-course/tree/master/课程目录/[课程名])
-> 
-> 替换为
->
-> \[点击该链接，下载本文件夹所有内容\](https://xovee.github.io/gitzip/?https://github.com/Xovee/uestc-course/tree/master/课程目录/微积分)
+> 例如：随着计算机技术的不断发展，使得曾经的计算模式逐渐由单机计算模式发展为网络计算模式，并成为计算技术下一个发展的趋势和潮流。本课程为信息与软件工程学院所开设的研究生专业基础课，主要讲授的内容包括：企业计算、网格计算、云计算、P2P 网络、CDN 网络、物联网和社会计算。
 
 ## 相关课程（可选）
 
@@ -25,3 +15,15 @@
 老师A|信息与软件工程学院|2010-2016, 2019
 老师B|信息与通信工程学院|2016-2018
 老师C、老师D|电子科学与工程学院|2017
+
+## 下载
+
+[点击该链接，下载本文件夹所有内容](https://xovee.github.io/gitzip/?https://github.com/Xovee/uestc-course/tree/master/课程目录/[课程名])
+
+**请将上面链接中方括号内中的课程名替换为真实的课程名**，例如：
+
+> \[点击该链接，下载本文件夹所有内容\](https://xovee.github.io/gitzip/?https://github.com/Xovee/uestc-course/tree/master/课程目录/[课程名])
+> 
+> 替换为
+>
+> \[点击该链接，下载本文件夹所有内容\](https://xovee.github.io/gitzip/?https://github.com/Xovee/uestc-course/tree/master/课程目录/微积分)
