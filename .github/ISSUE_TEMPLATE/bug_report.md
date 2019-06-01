@@ -2,7 +2,7 @@
 name: Bug report
 about: 如果仓库的资源或者内容有任何问题，请在此处提交问题报告，谢谢。
 title: "[问题报告] "
-labels: ''
+labels: bug
 assignees: ''
 
 ---
