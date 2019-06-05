@@ -8,7 +8,7 @@
 
 ## 下载
 
-[点击该链接，下载本文件夹所有内容](https://xovee.github.io/gitzip/?https://github.com/Xovee/uestc-course/tree/master/课程目录/860软件工程学科基础综合)
+[点击该链接，下载本文件夹所有内容](https://xovee.github.io/gitzip/?https://github.com/Xovee/uestc-course/tree/master/考研目录/860软件工程学科基础综合)
 
 ## 总体要求
 
