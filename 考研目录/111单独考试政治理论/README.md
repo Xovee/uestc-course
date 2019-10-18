@@ -8,7 +8,7 @@
 
 ## 下载
 
-[点击该链接，下载本文件夹所有内容](https://xovee.github.io/gitzip/?https://github.com/Xovee/uestc-course/tree/master/考研目录/111单独考试政治理论)
+[点击该链接，下载本文件夹所有内容](https://xovee.github.io/gitzip/?https://github.com/UESTC-Course/uestc-course/tree/master/考研目录/111单独考试政治理论)
 
 ## 总体要求
 
