@@ -8,7 +8,7 @@
 [![Issues](https://img.shields.io/github/issues/Xovee/uestc-course.svg)]()
 ![GitHub pull requests](https://img.shields.io/github/issues-pr/Xovee/uestc-course.svg)
 
-<span style='color:red'>更新：大家考完试，记着来贡献资源哦～如果能分享给其他小伙伴就更棒了！</span>
+**更新**：大家考完试，记着来贡献资源哦～如果能分享给其他小伙伴就更棒了！
 
 ## 课程目录
 
