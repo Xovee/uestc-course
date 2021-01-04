@@ -20,6 +20,8 @@ def traverse_dir(current_dir, num):
 
 num_files = 0
 
-num_files = traverse_dir('./', num_files)
+num_files = traverse_dir('./课程目录/', num_files)
 
-print('Number of files:', num_files)
+num_files = traverse_dir('./考研目录/', num_files)
+
+print('Number of all course files:', num_files)
