@@ -1,0 +1,165 @@
+\documentclass[letterpaper]{article}
+% \documentclass[runningheads]{llncs}
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{subfig}
+\usepackage[UTF8, scheme=plain]{ctex}
+\usepackage[colorlinks=true, linkcolor=red, filecolor=red, urlcolor=red, citecolor=cyan]{hyperref}
+% \usepackage{amsfonts}
+\usepackage{cleveref}
+\usepackage{listings}
+% \usepackage[htt]{hyphenat}
+% \usepackage[newfloat]{minted}
+% \usepackage{caption}
+% \newenvironment{code}{\captionsetup{type=listing}}{}
+% \SetupFloatingEnvironment{listing}{name=Snippet}
+\usepackage{geometry}
+\usepackage{multicol}
+% \geometry{a4paper}
+\setlength{\pdfpagewidth}{8.5in}  % DO NOT CHANGE THIS
+\setlength{\pdfpageheight}{11in}  % DO NOT CHANGE THIS
+\twocolumn
+% code block
+\geometry{a4paper,scale=0.95}
+\setlength{\parindent}{0pt}
+\frenchspacing
+\graphicspath{{./imgs/}}
+\allowdisplaybreaks
+\newcommand{\theo}{\textbf{Theorem:}}
+\begin{document}
+
+\title{组合优化}
+\author{Rongfan Li}
+\date{}
+
+\maketitle
+
+\begin{abstract}
+	Notes on combination optimal. 
+\end{abstract}
+
+\tableofcontents
+
+\clearpage
+
+\section{Linear programming}
+% \input{1-lp.tex}
+\subsection{单纯形法/对偶单纯形法}
+
+1. 化成标准型。非规范形式可反号或者添加两个$x$解决
+\begin{equation}\begin{aligned}
+	&\max z=\sum c_{j} x_{j}\\
+	&\text { s.t. }\left\{\begin{array}{c}
+	\sum_{j=1}^{n} a_{i j} x_{j}=b_{i}(i=1,2, \cdots, m) \\
+	x_{j} \geq 0 \quad(j=1,2, \cdots, n)
+	\end{array}\right.
+\end{aligned}\end{equation}
+
+
+2. 化成对偶问题。注意非规范形式
+
+3. 单纯形法/对偶单纯形法
+
+4. 互补松弛性。在已知P的最优解的时候，可以用来求D的最优解
+
+5. 人工变量法，两种思路
+
+记号，原问题P，对偶问题D
+\begin{equation}
+	\begin{aligned}
+		\operatorname{Max} Z=C X \quad & \text { Min } W=Y b\\
+		\text { s.t. } \quad A X \leq b \quad & \text { s.t. } \quad Y A \geq C \\
+		\quad X \geq 0 \quad & Y \geq 0
+	\end{aligned}
+\end{equation}
+
+\theo 对偶的对偶就是原问题
+
+\theo 若X和Y分别是可行解，则 $CX \leq YAX \leq Yb$，P的任意目标函数值是D的最优值的下界。若P有最优解，则D也有最优解，当等号取到，则分别为最优解，PD的最优解的值是相同的。
+
+\theo 若P无有限的最优解（无界），则D无可行解。
+
+除了上面两种情况，还有一种是两个都无可行解
+
+
+\subsection{整数规划IP--决策变量是整数}
+
+1. 割平面法，添加一个切割方程，p26，不断加约束直到b全为整数
+
+2. 分支定界法。画图辅助理解问题。对原问题的最优解，按照变量12分两支进行整数约束，求出新的最优解，若是整数解则停止，若不是则递归
+
+
+\section{Others}
+
+\subsection{DP}
+
+三个重要性质：最优子结构，重叠子问题，马氏性
+
+\subsection{背包问题KP}
+
+1. 分支定界法，标准化后的KP是一个整数规划问题
+
+2. DP
+
+\subsection{指派问题，匈牙利法}
+
+对同一工作所有人的效率同时变化不影响最优分配。对同一人的所有工作效率同时变化也不影响最优分配。
+
+\subsection{装箱问题}
+
+最优解的下界：全部都恰好装入了箱子中。下面全是近似算法
+
+1. NF/Next Fit。将$J_1$放入$B_1$后，如果$J_2$放不下，则直接封闭$B_1$并将$J_2$放入$B_2$。特点：封箱快，不需要全部物品装好后才能封箱搬运，适合场地小的安装。$O(n)$
+
+2. FF/First Fit。对于$J_i$依次检查前面的全部$B$，放入第一个能装下$J_i$的箱子，若都放不下则启用空箱子。$O(n\log n)$
+
+3. BF/Best Fit。$J_i$放入使得这个箱子剩余空间最小的那个箱子中。$O(n\log n)$
+
+4. FFD/BFD,先按长度从大到小排序再按FF/BF处理$O(n\log n)$
+
+FFD需要全部物品到了才能排序，不能用于在线装箱
+
+
+\subsection{作业调度问题}
+
+t是处理需要花费的时间，w是单位时间的损失，C是逗留时间，$C_{\max}$是时间表长/全体完工时间，d是限定的工期，L是延误时间
+
+1. 单机调度
+
+$1\| \sum w_j C_j$，总消耗最小最佳调度，$t/w$按照升序排列就是最佳调度。如果只考虑逗留时间，不考虑消耗，则视w=1
+
+$1\| L_{\max}$，最大的延误时间最小，EDD 最早工期优先，按d升序。
+
+$1\| \sum U$，延误的任务最少，按照EDD先排序，将延误任务和前面的全部任务中t最大的任务放最后。
+
+2. 平行机调度 PMS-m个机器并行
+
+$Pm\|C_{\max}$，最早完工时间，是NP-hard的，只有近似算法
+
+LS算法,将每一个J分给最早空闲的机器。适合在线调度
+
+LPT算法,按照加工时间t从大到小排列,再用LS(因而无法在线)
+
+3. 车间作业调度,多类型机
+
+$Fm\|C_{\max}$,m个机器流水线作业/每个作业有m道工序,共n个作业
+
+$F2\|C_{\max}$,Johnson/SPT-LPT算法,先将全部作业按照工序1花费时间是否比2少来分成两个集合,少的在J1中,按照工序1不减排列,J2集合中按照工序2不增排列。见eg.12
+
+\subsection{最大流问题}
+
+s源点,t汇点,c容量,f流量,截集:两个不相容的点集之间的弧
+
+增广路径:从s到t的无向弧集(前向和后向)，并且都不饱和
+
+$\theo$ 最大流的流值和最小截的容量相同
+
+$\theo$ f是最大流 $\iff$ D中没有f的增广路径
+
+
+% \bibliographystyle{plain}
+% \bibliography{./bib/doc.bib}
+
+\end{document}
