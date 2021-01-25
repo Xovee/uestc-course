@@ -18,10 +18,24 @@ def traverse_dir(current_dir, num):
                 num += 1
     return num
 
+def count_num_courses(dir, num):
+    file_list = os.listdir(dir)
+    for file in file_list:
+        path = os.path.join(dir, file)
+        if os.path.isdir(path):
+            num += 1
+    return num
+
+
 num_files = 0
+num_courses = 0
 
 num_files = traverse_dir('./课程目录/', num_files)
-
 num_files = traverse_dir('./考研目录/', num_files)
 
+num_courses = count_num_courses('./课程目录/', num_courses)
+num_courses = count_num_courses('./考研目录/', num_courses)
+
+
+print('Number of courses:', num_courses)
 print('Number of all course files:', num_files)
