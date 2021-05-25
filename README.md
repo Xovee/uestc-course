@@ -8,7 +8,7 @@
 [![Issues](https://img.shields.io/github/issues/Xovee/uestc-course.svg)]()
 ![GitHub pull requests](https://img.shields.io/github/issues-pr/Xovee/uestc-course.svg)
 
-**更新**：大家考完试，记着来贡献资源哦～如果能把仓库分享给其他小伙伴就更棒了！
+**更新**：最近来star的小伙伴变多了，应该是考试周快到了吧。希望本仓库能对大家有帮助。大家考完试，也希望能记得贡献一些复习资料，支持仓库的可持续发展。
 
 ## 课程目录
 
@@ -38,6 +38,6 @@
 
 ### 联系方式
 
-如果您有任何问题，请通过电子邮件 xovee at ieee.org 与我们联系。
+如果您有任何问题，请通过电子邮件 xovee at ieee.org 与我联系。
 
 <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="知识共享许可协议" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />本仓库的资源默认采用<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a>进行许可，有特别说明的除外。这意味着您可以对本仓库中所包含的资源进行复制、发行、修改和创作等，但不得用于商业性目的，在使用时须进行署名，且以相同或兼容的协议进行许可。
