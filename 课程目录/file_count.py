@@ -31,10 +31,8 @@ num_files = 0
 num_courses = 0
 
 num_files = traverse_dir('./课程目录/', num_files)
-num_files = traverse_dir('./考研目录/', num_files)
 
 num_courses = count_num_courses('./课程目录/', num_courses)
-num_courses = count_num_courses('./考研目录/', num_courses)
 
 
 print('Number of courses:', num_courses)
