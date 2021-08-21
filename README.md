@@ -8,7 +8,7 @@
 [![Issues](https://img.shields.io/github/issues/Xovee/uestc-course.svg)]()
 ![GitHub pull requests](https://img.shields.io/github/issues-pr/Xovee/uestc-course.svg)
 
-**更新**：最近来star的小伙伴变多了，应该是考试周快到了吧。希望本仓库能对大家有帮助。大家考完试，也希望能记得贡献一些复习资料，支持仓库的可持续发展。
+**更新**：大家考完试了吧？有时间记得贡献一些复习资料，支持仓库的可持续发展。分享仓库给小伙伴也非常欢迎哦！
 
 ## 课程目录
 
