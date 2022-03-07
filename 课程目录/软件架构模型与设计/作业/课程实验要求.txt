@@ -1,0 +1,8 @@
+﻿实验要求：
+（1）安装部署Hadoop、HDFS、MapReduce、Spark；
+
+（2）分别在MapReduce及Spark执行词频统计；
+
+（3）比较MapReduce及Spark执行效率异同；
+
+（4）从软件体系架构角度解释分析实验结果。
