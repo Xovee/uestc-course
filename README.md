@@ -3,6 +3,13 @@
 
 本仓库的内容包括电子科技大学的各类课程复习资料。本仓库为非营利、永久免费的开源项目，仓库之目的即推动**知识传播**、**提高资源质量**、**减少获取成本**、**提倡无纸化资料**、**促进教育公平**，让我电学子在备考、复习之时不必再苦寻资料。仓库内容之充实全凭网友贡献，望各位读者在有所获的同时，能积极上传资源、完善资源，使仓库可良性发展。如诸君对仓库有任何改进意见，还请不吝赐教。目前已收录90余门课程，900多个资源。
 
+<details>
+  <summary>English Introduction</summary>
+    <p>
+      This repo provides many course review materials of the University of Electronic Science and Technology of China (UESTC), Chengdu, China. This repo is a non-profit free open-access project. The purpose of this repo is advocating the <b>sharing of knowledge</b>, <b>material quality improving</b>, <b>acquisition cost reduction</b>, <b>promoting paperless materials</b>, and <b>facilitating the educational equity</b>. This repo expects to help UESTC students for finding course materials in ease. A wealthy repo depends on the contributions of users. We hope the repo users could sharing their materials in hand to the repo, helping other users to gain more materials. If you have any suggestions for repo improvements, please let us know. The repo now contains 90+ courses with 900+ materials. 
+    </p>
+</details>
+
 [![Stars](https://img.shields.io/github/stars/Xovee/uestc-course.svg)](https://github.com/Xovee/uestc-course/stargazers)
 [![Forks](https://img.shields.io/github/forks/Xovee/uestc-course.svg)](https://github.com/Xovee/uestc-course/network/members)
 ![GitHub repo size](https://img.shields.io/github/repo-size/Xovee/uestc-course.svg)
