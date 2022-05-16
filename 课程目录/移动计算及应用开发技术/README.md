@@ -14,4 +14,4 @@ Android Lifecycle 实现|实现处理 Android 应用的生命周期行为|[Lolip
 
 ## 下载
 
-[点击该链接，下载本文件夹所有内容](https://xovee.github.io/gitzip/?https://github.com/Xovee/uestc-course/tree/master/课程目录/移动计算及应用开发技术)
+[点击该链接，下载本文件夹所有内容](https://xovee.github.io/gitzip/?https://github.com/Xovee/uestc-course/tree/main/课程目录/移动计算及应用开发技术)

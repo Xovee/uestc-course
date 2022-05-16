@@ -6,4 +6,4 @@ Fall 2021|Bakh Khoussainov (巴哈迪·马马萨迪科维奇·库谢诺夫)|博�
 
 ## 下载
 
-[点击链接，下载文件夹内所有内容](https://xovee.github.io/gitzip/?https://github.com/Xovee/uestc-course/tree/master/课程目录/计算机科学中的数学基础)
+[点击链接，下载文件夹内所有内容](https://xovee.github.io/gitzip/?https://github.com/Xovee/uestc-course/tree/main/课程目录/计算机科学中的数学基础)
