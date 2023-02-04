@@ -1,7 +1,7 @@
 <p align='center'><img src='./assets/img/repo-banner.png#gh-light-mode-only' width=70%></p>
 <p align='center'><img src='./assets/img/repo-banner-dark.png#gh-dark-mode-only' width=70%></p>
 
-本仓库的内容包括电子科技大学的各类课程复习资料。本仓库为非营利、永久免费的开源项目，仓库之目的即推动**知识传播**、**提高资源质量**、**减少获取成本**、**提倡无纸化资料**、**促进教育公平**，让我电学子在备考、复习之时不必再苦寻资料。仓库内容之充实全凭网友贡献，望各位读者在有所获的同时，能积极上传资源、完善资源，使仓库可良性发展。如诸君对仓库有任何改进意见，还请不吝赐教。目前已收录100余门课程，900多个资源。
+本仓库的内容包括电子科技大学的各类课程复习资料。本仓库为非营利、永久免费的开源项目，仓库之目的即推动**知识传播**、**提高资源质量**、**减少获取成本**、**提倡无纸化资料**、**促进教育公平**，让我电学子在备考、复习之时不必再苦寻资料。仓库内容之充实全凭网友贡献，望各位读者在有所获的同时，能积极上传资源、完善资源，使仓库可良性发展。如诸君对仓库有任何改进意见，还请不吝赐教。目前已收录100余门课程，1100多个资源。
 
 [![Stars](https://img.shields.io/github/stars/Xovee/uestc-course.svg)](https://github.com/Xovee/uestc-course/stargazers)
 [![Forks](https://img.shields.io/github/forks/Xovee/uestc-course.svg)](https://github.com/Xovee/uestc-course/network/members)
@@ -30,11 +30,11 @@
 
 [**贡献指南**](./assets/贡献指南.md) 中介绍了各种为仓库做出贡献的方法，包括：新增资源、完善资源、提出改进意见和加入项目组等。
 
-## 其余事项
+## 其它
 
 ### 贡献者名单
 
-[**贡献者名单**](./assets/贡献者名单.md) 中陈列了为本仓库做出贡献的人，感谢你们，:heart:
+[**贡献者名单**](./assets/贡献者名单.md) 中陈列了为本仓库做出贡献的人（不完整名单），感谢你们，:heart:
 
 ### 仓库协议
 
