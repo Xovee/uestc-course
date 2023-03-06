@@ -2,6 +2,9 @@
 
 文件名|作者|文件类型|文件大小|最近更新时间|备注
 ---|---|---|---|---|---
+2023新中特资料：二十大报告、十九届六中全会、党的百年奋斗总结|Unknown|PDF|1.4 MB|2023年3月6日|来自[河畔](https://bbs.uestc.edu.cn/forum.php?mod=viewthread&tid=2014367&extra=page%3D1&page=1)
+10明确+14坚持+13方面成就|Unknown|PDF|203 KB|2023年3月6日|来自[河畔](https://bbs.uestc.edu.cn/forum.php?mod=viewthread&tid=2015100&extra=page%3D1)
+20大报告+19届6、7中全会报告|Unknown|PDF|706 KB|2023年3月6日
 2020秋中特考试说明与资料|Unknown|Zip|69 KB|2021年1月25日
 习近平近期重要讲话精神|Unknown|PDF|207.3 KB|2021年1月6日
 肖四中特+当代部分整理|Unknown|PDF|1.7 MB|2021年1月6日
