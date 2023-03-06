@@ -10,3 +10,6 @@
 不明2版本2-期末考试-有答案|算法分析与设计|Unknown|Word|324 KB
 不明2版本2-期末考试-无答案|算法分析与设计|Unknown|PDF|123 KB
 不明3-期末考试-有答案|算法分析与设计|Unknown|Word|84 KB
+来自知博的试题1|算法分析与设计|Unknown|Image|1.48 MB
+来自知博的试题2|算法分析与设计|Unknown|Image|1.17 MB
+来自知博的试题3|算法分析与设计|Unknown|Image|668 KB
