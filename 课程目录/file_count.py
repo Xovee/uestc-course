@@ -30,9 +30,12 @@ def count_num_courses(dir, num):
 num_files = 0
 num_courses = 0
 
-num_files = traverse_dir('./课程目录/', num_files)
+path = './课程目录/'
+# path = './考研目录/'
 
-num_courses = count_num_courses('./课程目录/', num_courses)
+num_files = traverse_dir(path, num_files)
+
+num_courses = count_num_courses(path, num_courses)
 
 
 print('Number of courses:', num_courses)
