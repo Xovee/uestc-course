@@ -48,6 +48,3 @@
 
 <p align='center' style='margin-top: 1em;'><img src='./assets/img/university-motto.png' width=85%></p>
 
-## Stars
-
-[![Star History Chart](https://api.star-history.com/svg?repos=Xovee/uestc-course&type=Date)](https://star-history.com/#Xovee/uestc-course&Date)
