@@ -2,6 +2,7 @@
 
 文件名|作者|文件类型|文件大小|最近更新时间|备注
 ---|---|---|---|---|---
+河畔复习指北|Unknown|TXT|5 KB|2025年5月17日|来自[河畔](https://bbs.uestc.edu.cn/forum.php?mod=viewthread&tid=2302365)
 课后习题答案|Unknown|PDF|1.11 MB|2022年6月16日|缺少第3章
 图论概念|Unknown|APKG|427 KB|2021年6月5日|打开文件可能需要额外的工具
 图论结论|Unknown|APKG|3.65 MB|2021年6月5日|打开文件可能需要额外的工具
