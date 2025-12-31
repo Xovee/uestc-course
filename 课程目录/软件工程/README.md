@@ -1,5 +1,10 @@
 # 软件工程
 
+开课学院：
+
+- 计算机科学与技术学院，本科
+- 信息与软件工程学院
+
 ## 下载
 
 [点击该链接，下载本文件夹所有内容](https://xovee.github.io/gitzip/?https://github.com/Xovee/uestc-course/tree/main/课程目录/软件工程)
