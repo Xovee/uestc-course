@@ -1,0 +1,81 @@
+\documentclass[12pt,a4paper]{ctexart}
+
+\usepackage[left=2.6cm,right=2.6cm,top=2.8cm,bottom=2.8cm]{geometry}
+\usepackage{setspace}
+\usepackage{indentfirst}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{amsmath,amssymb}
+\usepackage[hidelinks]{hyperref}
+
+% 行距与段落
+\setstretch{1.35}
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0pt}
+
+% 页眉页脚
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{信息论课程设计报告}
+\fancyhead[R]{电子科技大学}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% 标题格式：一级标题居中，显示为“第一章、第二章...”
+\titleformat{\section}{\centering\bfseries\zihao{-3}}{第\chinese{section}章}{0.8em}{}
+\titleformat{\subsection}{\bfseries\zihao{4}}{\thesubsection}{0.8em}{}
+
+\begin{document}
+	
+	\begin{center}
+		{\zihao{2}\bfseries 信息论课程设计报告\par}
+		\vspace{0.8em}
+		{\zihao{4} 姓名 \quad 学号\par}
+		\vspace{1.2em}
+	\end{center}
+	
+	% ============ 报告正文（请按实际内容修改） ============
+	
+	\section{课程设计目的}
+	
+	请在此处阐述本次课程设计的目的，包括要解决的信息论问题、拟验证的理论知识以及预期达到的目标。
+	
+	\section{课程设计原理}
+	
+	结合信息论相关知识，说明本次设计所依据的基本原理。可涉及信源编码、信道容量、率失真函数、纠错编码等内容，必要时使用公式辅助说明。
+	
+	\subsection{原理一}
+	例如：香农三大定理的基本思想与指导意义。
+	
+	\subsection{原理二}
+	例如：具体编码或译码算法的数学描述。
+	
+	\section{课程设计内容与步骤}
+	
+	详细描述设计任务、实验方案或仿真步骤。
+	
+	\subsection{任务描述}
+	说明设计的具体要求、输入输出和评价指标。
+	
+	\subsection{实验平台与工具}
+	列出使用的编程语言、仿真软件等。
+	
+	\subsection{实现步骤}
+	按先后顺序写出核心步骤，可附上关键代码片段或流程图描述。
+	
+	\section{结果与分析}
+	
+	展示设计结果（如图表、数据表格），并结合信息论知识进行分析。
+	
+	\subsection{结果展示}
+	以图、表等形式给出实验结果。
+	
+	\subsection{分析与讨论}
+	解释结果是否符合理论预期，讨论误差来源、性能提升方法等。
+	
+	\section{总结与体会}
+	
+	总结本次课程设计的收获、遇到的问题及解决方法，并谈谈对信息论在实际工程中应用的进一步认识。
+	
+\end{document}
