@@ -13,7 +13,6 @@ python tools\ingest_resources.py prepare --incoming _incoming --output _incoming
 ```
 
 - Review `_incoming/plan.json` before applying anything.
-- Do not commit, push, or open a PR unless the user explicitly asks.
 - Do not delete files from `_incoming/`; the ingestion flow preserves source
   files by default.
 
@@ -71,6 +70,22 @@ python tools\ingest_resources.py prepare --incoming _incoming --output _incoming
 - If course matching is ambiguous, leave the item for human review.
 - SQL machine-test practice materials are usually review/practice resources,
   not `历年试题`, unless the user explicitly says otherwise.
+
+## Commit and Push Policy
+
+- After organizing materials, decide whether the result is low-risk enough to
+  finish end-to-end or should wait for human review.
+- If the placement is clear, the content screening is low-risk, metadata can be
+  verified from file content or issue/PR guidance, README format matches the
+  template, and verification passes, commit and push directly to GitHub.
+- If there is meaningful uncertainty, stop before `git add`, `git commit`, and
+  `git push`; summarize the concern and wait for the user to review and approve.
+- Human review is required for unclear course ownership, privacy or copyright
+  concerns, sensitive/prohibited content, conflicting metadata, unreadable
+  archives or binary resources, new-course structure uncertainty, or exam
+  metadata that cannot be reliably inferred.
+- Never open a PR unless the user explicitly asks. The normal maintainer flow is
+  direct push to `origin/main` after a low-risk local verification pass.
 
 ## README Updates
 
