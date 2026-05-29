@@ -34,6 +34,8 @@ CATEGORY_ASSIGNMENTS = "作业"
 
 EXAM_KEYWORDS = ("考试", "试题", "真题", "期中", "期末", "考题", "试卷", "A卷", "B卷")
 ASSIGNMENT_KEYWORDS = ("作业", "实验", "报告", "随堂测试", "课堂测试", "练习")
+REVIEW_HINT_KEYWORDS = ("复习", "总结", "知识汇总", "练手")
+STRONG_EXAM_EVIDENCE_KEYWORDS = ("试题", "真题", "试卷", "A卷", "B卷", "回忆版")
 
 IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".gif", ".webp", ".bmp", ".tif", ".tiff"}
 WORD_EXTENSIONS = {".doc", ".docx"}
@@ -137,6 +139,12 @@ def infer_course(entry_name: str, courses: list[str]) -> CourseMatch:
 
 def infer_category(entry_name: str) -> str:
     stem = Path(entry_name).stem
+    if "机考题" in stem and not any(keyword in stem for keyword in STRONG_EXAM_EVIDENCE_KEYWORDS):
+        return CATEGORY_REVIEW
+    if any(keyword in stem for keyword in REVIEW_HINT_KEYWORDS) and not any(
+        keyword in stem for keyword in STRONG_EXAM_EVIDENCE_KEYWORDS
+    ):
+        return CATEGORY_REVIEW
     if any(keyword in stem for keyword in EXAM_KEYWORDS):
         return CATEGORY_EXAMS
     if any(keyword in stem for keyword in ASSIGNMENT_KEYWORDS):
@@ -498,6 +506,12 @@ def build_entry(source: Path, incoming: Path, repo_root: Path, courses: list[str
     content_screening = None
     if prepare:
         content_screening = screen_resource(source)
+        if category in {CATEGORY_EXAMS, "历年真题"}:
+            warnings.append("exam_metadata_requires_content_review")
+            status = "needs_review"
+            should_apply = False
+            if source.suffix.casefold() in ARCHIVE_EXTENSIONS:
+                warnings.append("exam_archive_should_be_extracted")
         if content_screening["risk_level"] in {"high", "medium", "unknown"}:
             if content_screening["findings"]:
                 warnings.append("content_risk_found")
@@ -655,7 +669,16 @@ def count_file_tables(readme_path: Path) -> int:
     return count
 
 
-def default_readme_content(category: str) -> str:
+def read_template(repo_root: Path, *relative_parts: str) -> str | None:
+    template = repo_root / COURSE_ROOT_NAME / "0-模板"
+    for part in relative_parts:
+        template = template / part
+    if not template.exists():
+        return None
+    return read_text(template)
+
+
+def fallback_readme_content(category: str) -> str:
     if category in {CATEGORY_EXAMS, "历年真题"}:
         header = "文件名|来源|文件类型|文件大小|备注"
         separator = "---|---|---|---|---"
@@ -668,7 +691,22 @@ def default_readme_content(category: str) -> str:
     return f"# {category}\n\n{header}\n{separator}\n"
 
 
-def default_course_readme_content(course: str) -> str:
+def default_readme_content(category: str, repo_root: Path) -> str:
+    template_category = CATEGORY_EXAMS if category == "历年真题" else category
+    template = read_template(repo_root, template_category, "README.md")
+    if template is None:
+        return fallback_readme_content(category)
+    if category != template_category:
+        template = re.sub(r"^# .+$", f"# {category}", template, count=1, flags=re.MULTILINE)
+    lines = template.splitlines()
+    table = find_file_table(lines)
+    if table is not None:
+        _, separator_index, _ = table
+        template = "\n".join(lines[: separator_index + 1]) + "\n"
+    return template if template.endswith("\n") else template + "\n"
+
+
+def fallback_course_readme_content(course: str) -> str:
     return (
         f"# {course}\n\n"
         "课程介绍。\n\n"
@@ -683,17 +721,40 @@ def default_course_readme_content(course: str) -> str:
     )
 
 
-def ensure_course_readme(course_dir: Path, course: str) -> None:
+def default_course_readme_content(course: str, repo_root: Path) -> str:
+    template = read_template(repo_root, "README.md")
+    if template is None:
+        return fallback_course_readme_content(course)
+    template = re.sub(r"^# .+$", f"# {course}", template, count=1, flags=re.MULTILINE)
+    template = template.replace("【替换为文件夹名】", course)
+    return template if template.endswith("\n") else template + "\n"
+
+
+def ensure_course_readme(course_dir: Path, course: str, repo_root: Path) -> None:
     readme = course_dir / "README.md"
     if not readme.exists():
-        write_text(readme, default_course_readme_content(course))
+        write_text(readme, default_course_readme_content(course, repo_root))
 
 
 def row_for_headers(headers: list[str], metadata: dict[str, Any]) -> str:
     values = []
-    for header in normalized_headers(headers):
-        values.append(value_for_header(header, metadata))
+    normalized = normalized_headers(headers)
+    row_metadata = metadata_with_author_note(normalized, metadata)
+    for header in normalized:
+        values.append(value_for_header(header, row_metadata))
     return "|".join(values)
+
+
+def metadata_with_author_note(headers: list[str], metadata: dict[str, Any]) -> dict[str, Any]:
+    author = str(metadata.get("author") or "")
+    if not author or author == "Unknown" or "作者" in headers or "备注" not in headers:
+        return metadata
+    row_metadata = dict(metadata)
+    remark = str(row_metadata.get("remark") or "")
+    author_note = f"作者：{author}"
+    if author_note not in remark:
+        row_metadata["remark"] = f"{remark}；{author_note}" if remark else author_note
+    return row_metadata
 
 
 def value_for_header(header: str, metadata: dict[str, Any]) -> str:
@@ -703,6 +764,12 @@ def value_for_header(header: str, metadata: dict[str, Any]) -> str:
         return str(metadata.get("author") or "Unknown")
     if header == "来源":
         return str(metadata.get("source") or "Local")
+    if header == "科目":
+        return str(metadata.get("subject", ""))
+    if header == "考试形式":
+        return str(metadata.get("exam_form", ""))
+    if header == "答案":
+        return str(metadata.get("answer", ""))
     if header == "文件类型":
         return str(metadata.get("file_type", ""))
     if header == "文件大小":
@@ -714,9 +781,9 @@ def value_for_header(header: str, metadata: dict[str, Any]) -> str:
     return ""
 
 
-def update_category_readme(readme_path: Path, category: str, metadata: dict[str, Any]) -> None:
+def update_category_readme(readme_path: Path, category: str, metadata: dict[str, Any], repo_root: Path) -> None:
     if not readme_path.exists():
-        write_text(readme_path, default_readme_content(category))
+        write_text(readme_path, default_readme_content(category, repo_root))
 
     content = read_text(readme_path)
     lines = content.splitlines()
@@ -726,16 +793,38 @@ def update_category_readme(readme_path: Path, category: str, metadata: dict[str,
     if table is None:
         if content and not content.endswith("\n"):
             content += "\n"
-        content += "\n" + default_readme_content(category)
+        content += "\n" + default_readme_content(category, repo_root)
         lines = content.splitlines()
         table = find_file_table(lines)
         if table is None:
             raise ValueError(f"Could not create README table in {readme_path}")
 
     _, separator_index, headers = table
+    lines, separator_index, headers = ensure_remark_column_for_author(lines, separator_index, headers, metadata)
     row = row_for_headers(headers, metadata)
     lines.insert(separator_index + 1, row)
     write_text(readme_path, "\n".join(lines) + "\n")
+
+
+def ensure_remark_column_for_author(
+    lines: list[str],
+    separator_index: int,
+    headers: list[str],
+    metadata: dict[str, Any],
+) -> tuple[list[str], int, list[str]]:
+    normalized = normalized_headers(headers)
+    author = str(metadata.get("author") or "")
+    if not author or author == "Unknown" or "作者" in normalized or "备注" in normalized:
+        return lines, separator_index, headers
+
+    header_index = separator_index - 1
+    lines[header_index] = lines[header_index].rstrip("|") + "|备注"
+    lines[separator_index] = lines[separator_index].rstrip("|") + "|---"
+    index = separator_index + 1
+    while index < len(lines) and "|" in lines[index] and lines[index].strip():
+        lines[index] = lines[index].rstrip("|") + "|"
+        index += 1
+    return lines, separator_index, headers + ["备注"]
 
 
 def validate_plan_entry(entry: dict[str, Any]) -> tuple[str, str, str, dict[str, Any]]:
@@ -763,6 +852,15 @@ def apply_plan(incoming: Path, repo_root: Path, plan: dict[str, Any]) -> dict[st
             continue
 
         course, category, filename, metadata = validate_plan_entry(entry)
+        if (
+            category in {CATEGORY_EXAMS, "历年真题"}
+            and Path(filename).suffix.casefold() in ARCHIVE_EXTENSIONS
+            and not entry.get("allow_exam_archive", False)
+        ):
+            raise ValueError(
+                "Exam archives must be extracted before applying, unless allow_exam_archive is true: "
+                f"{entry.get('source')}"
+            )
         source = (incoming / str(entry.get("source", ""))).resolve()
         if not is_relative_to(source, incoming):
             raise ValueError(f"Source escapes incoming directory: {entry.get('source')}")
@@ -772,7 +870,7 @@ def apply_plan(incoming: Path, repo_root: Path, plan: dict[str, Any]) -> dict[st
         course_dir = repo_root / COURSE_ROOT_NAME / course
         target_dir = course_dir / category
         target_dir.mkdir(parents=True, exist_ok=True)
-        ensure_course_readme(course_dir, course)
+        ensure_course_readme(course_dir, course, repo_root)
         target = target_dir / filename
         if target.exists():
             raise FileExistsError(f"Destination already exists: {target}")
@@ -782,7 +880,7 @@ def apply_plan(incoming: Path, repo_root: Path, plan: dict[str, Any]) -> dict[st
         else:
             shutil.copy2(source, target)
 
-        update_category_readme(target_dir / "README.md", category, metadata)
+        update_category_readme(target_dir / "README.md", category, metadata, repo_root)
         applied.append(
             {
                 "source": str(source),
@@ -806,6 +904,7 @@ def audit_repository(repo_root: Path) -> dict[str, Any]:
     course_root = repo_root / COURSE_ROOT_NAME
     return {
         "missing_category_readmes": missing_category_readmes(course_root),
+        "category_readme_template_mismatches": category_readme_template_mismatches(repo_root),
         "top_level_readme_issues": top_level_readme_issues(repo_root),
         "template_missing_targets": template_missing_targets(repo_root),
         "missing_relative_markdown_links": missing_relative_markdown_links(repo_root),
@@ -826,6 +925,57 @@ def missing_category_readmes(course_root: Path) -> list[str]:
             if category_dir.is_dir() and not (category_dir / "README.md").exists():
                 missing.append(str(category_dir))
     return sorted(missing)
+
+
+def template_table_schema(repo_root: Path, category: str) -> tuple[str, str] | None:
+    template_category = CATEGORY_EXAMS if category == "历年真题" else category
+    template = read_template(repo_root, template_category, "README.md")
+    if template is None:
+        return None
+    lines = template.splitlines()
+    table = find_file_table(lines)
+    if table is None:
+        return None
+    header_index, separator_index, _ = table
+    return lines[header_index], lines[separator_index]
+
+
+def category_readme_template_mismatches(repo_root: Path) -> list[dict[str, Any]]:
+    course_root = repo_root / COURSE_ROOT_NAME
+    if not course_root.exists():
+        return []
+    mismatches = []
+    for course in course_root.iterdir():
+        if not course.is_dir() or course.name.startswith("0-"):
+            continue
+        for category_dir in course.iterdir():
+            readme = category_dir / "README.md"
+            if not category_dir.is_dir() or not readme.exists():
+                continue
+            expected = template_table_schema(repo_root, category_dir.name)
+            if expected is None:
+                continue
+            try:
+                lines = read_text(readme).splitlines()
+            except UnicodeDecodeError:
+                continue
+            table = find_file_table(lines)
+            if table is None:
+                mismatches.append({"path": str(readme), "issue": "missing_file_table"})
+                continue
+            header_index, separator_index, _ = table
+            actual = (lines[header_index], lines[separator_index])
+            if actual != expected:
+                mismatches.append(
+                    {
+                        "path": str(readme),
+                        "expected_header": expected[0],
+                        "actual_header": actual[0],
+                        "expected_separator": expected[1],
+                        "actual_separator": actual[1],
+                    }
+                )
+    return sorted(mismatches, key=lambda item: item["path"])
 
 
 def template_missing_targets(repo_root: Path) -> list[str]:
@@ -938,7 +1088,7 @@ def download_link_mismatches(course_root: Path) -> list[dict[str, Any]]:
 
 
 def load_json(path: Path) -> dict[str, Any]:
-    with path.open("r", encoding="utf-8") as handle:
+    with path.open("r", encoding="utf-8-sig") as handle:
         return json.load(handle)
 
 
@@ -973,6 +1123,8 @@ def build_parser() -> argparse.ArgumentParser:
     apply_parser = subparsers.add_parser("apply", help="Apply a human-reviewed JSON plan.")
     apply_parser.add_argument("--incoming", type=Path, default=Path(DEFAULT_INCOMING))
     apply_parser.add_argument("--plan", type=Path, required=True)
+
+    subparsers.add_parser("audit", help="Audit repository consistency without modifying files.")
     return parser
 
 
@@ -989,6 +1141,9 @@ def main(argv: list[str] | None = None) -> int:
         elif args.command == "apply":
             plan = load_json(args.plan)
             report = apply_plan(args.incoming, args.repo_root, plan)
+            dump_json(report)
+        elif args.command == "audit":
+            report = audit_repository(args.repo_root)
             dump_json(report)
         else:
             parser.error(f"Unknown command: {args.command}")

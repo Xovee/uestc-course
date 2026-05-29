@@ -31,9 +31,36 @@ class IngestResourcesTest(unittest.TestCase):
         self.incoming.mkdir()
         self.course_root = self.repo / "课程目录"
         self.course_root.mkdir()
+        self.make_templates()
 
     def tearDown(self) -> None:
         self.temp.cleanup()
+
+    def make_templates(self) -> None:
+        template_root = self.course_root / "0-模板"
+        (template_root / "作业").mkdir(parents=True)
+        (template_root / "历年试题").mkdir()
+        (template_root / "复习资料").mkdir()
+        (template_root / "README.md").write_text(
+            "# 模板\n\n"
+            "课程介绍。\n\n"
+            "## 下载\n\n"
+            "[点击链接，下载文件夹内所有内容]"
+            "(https://xovee.github.io/gitzip/?https://github.com/Xovee/uestc-course/tree/main/课程目录/【替换为文件夹名】)\n",
+            encoding="utf-8",
+        )
+        (template_root / "作业" / "README.md").write_text(
+            "# 作业\n\n文件名|文件类型|文件大小|备注\n---|---|---|---\n模板作业|PDF|1 KB|\n",
+            encoding="utf-8",
+        )
+        (template_root / "历年试题" / "README.md").write_text(
+            "# 历年试题\n\n文件名|来源 | 文件类型|文件大小|备注\n---|--|------|-------|---\n模板试题|河畔|PDF|1 KB|\n",
+            encoding="utf-8",
+        )
+        (template_root / "复习资料" / "README.md").write_text(
+            "# 复习资料\n\n文件名|作者|来源|文件类型|文件大小|最近更新时间|备注\n---|---|---|---|---|---|---\n模板复习|Unknown|Local|PDF|1 KB||\n",
+            encoding="utf-8",
+        )
 
     def make_course(self, name: str, category: str, readme: str | None = None) -> Path:
         category_dir = self.course_root / name / category
@@ -69,10 +96,16 @@ class IngestResourcesTest(unittest.TestCase):
             "作业",
             "# 作业\n\n文件名|文件类型|文件大小|备注\n---|---|---|---\n",
         )
+        self.make_course(
+            "数据库原理及应用",
+            "复习资料",
+            "# 复习资料\n\n文件名|来源|文件类型|文件大小|备注\n---|---|---|---|---\n",
+        )
         expected_mtime = datetime(2024, 3, 4, 12, 0, 0)
         self.touch_file("网络计算模式-复习重点.pdf", b"x" * 2048, expected_mtime)
         self.touch_file("组合数学-2025年秋-期中考试-无答案.docx")
         self.touch_file("数字逻辑-第一次作业.pdf")
+        self.touch_file("数据库原理及应用-软院SQL机考题.zip")
 
         plan = ingest.scan_resources(self.incoming, self.repo)
         by_source = {entry["source"]: entry for entry in plan["entries"]}
@@ -90,6 +123,9 @@ class IngestResourcesTest(unittest.TestCase):
 
         assignment = by_source["数字逻辑-第一次作业.pdf"]
         self.assertEqual(assignment["destination"]["category"], "作业")
+
+        sql_machine_test = by_source["数据库原理及应用-软院SQL机考题.zip"]
+        self.assertEqual(sql_machine_test["destination"]["category"], "复习资料")
 
     def test_multiple_course_matches_need_review(self) -> None:
         self.make_course("操作系统", "复习资料", "# 复习资料\n")
@@ -181,6 +217,99 @@ class IngestResourcesTest(unittest.TestCase):
             content.index("旧资料"),
         )
 
+    def test_apply_uses_category_template_and_keeps_author_in_remarks(self) -> None:
+        self.make_course("数据库原理及应用", "历年试题")
+        self.touch_file("数据库-2026年-期中考试.docx", b"x" * 512)
+        plan = {
+            "entries": [
+                {
+                    "source": "数据库-2026年-期中考试.docx",
+                    "apply": True,
+                    "destination": {
+                        "course": "数据库原理及应用",
+                        "category": "历年试题",
+                        "filename": "2026年-期中考试-无答案.docx",
+                    },
+                    "metadata": {
+                        "display_name": "2026年-期中考试-无答案",
+                        "author": "woohaixi",
+                        "source": "GitHub Issue",
+                        "file_type": "Word",
+                        "file_size": "512 B",
+                        "remark": "闭卷",
+                    },
+                }
+            ]
+        }
+
+        ingest.apply_plan(self.incoming, self.repo, plan)
+
+        content = (self.course_root / "数据库原理及应用" / "历年试题" / "README.md").read_text(encoding="utf-8")
+        self.assertIn("文件名|来源 | 文件类型|文件大小|备注", content)
+        self.assertNotIn("模板试题", content)
+        self.assertIn("2026年-期中考试-无答案|GitHub Issue|Word|512 B|闭卷；作者：woohaixi", content)
+
+    def test_prepare_marks_exam_archives_for_extraction(self) -> None:
+        self.make_course(
+            "数据库原理及应用",
+            "历年试题",
+            "# 历年试题\n\n文件名|来源|文件类型|文件大小|备注\n---|---|---|---|---\n",
+        )
+        self.touch_file("数据库原理及应用-期末真题.zip")
+
+        plan = ingest.prepare_resources(self.incoming, self.repo)
+        entry = plan["entries"][0]
+
+        self.assertEqual(entry["destination"]["category"], "历年试题")
+        self.assertIn("exam_metadata_requires_content_review", entry["warnings"])
+        self.assertIn("exam_archive_should_be_extracted", entry["warnings"])
+        self.assertFalse(entry["apply"])
+
+    def test_prepare_requires_exam_metadata_content_review(self) -> None:
+        self.make_course(
+            "数据库原理及应用",
+            "历年试题",
+            "# 历年试题\n\n文件名|来源|文件类型|文件大小|备注\n---|---|---|---|---\n",
+        )
+        self.touch_file("数据库原理及应用-2007年-期末考试.docx", b"safe text")
+
+        plan = ingest.prepare_resources(self.incoming, self.repo)
+        entry = plan["entries"][0]
+
+        self.assertEqual(entry["status"], "needs_review")
+        self.assertFalse(entry["apply"])
+        self.assertIn("exam_metadata_requires_content_review", entry["warnings"])
+
+    def test_apply_rejects_exam_zip_without_explicit_override(self) -> None:
+        self.make_course(
+            "数据库原理及应用",
+            "历年试题",
+            "# 历年试题\n\n文件名|来源|文件类型|文件大小|备注\n---|---|---|---|---\n",
+        )
+        self.touch_file("数据库原理及应用-期末真题.zip")
+        plan = {
+            "entries": [
+                {
+                    "source": "数据库原理及应用-期末真题.zip",
+                    "apply": True,
+                    "destination": {
+                        "course": "数据库原理及应用",
+                        "category": "历年试题",
+                        "filename": "数据库原理及应用-期末真题.zip",
+                    },
+                    "metadata": {
+                        "display_name": "数据库原理及应用-期末真题",
+                        "source": "Issue",
+                        "file_type": "ZIP",
+                        "file_size": "1 B",
+                    },
+                }
+            ]
+        }
+
+        with self.assertRaisesRegex(ValueError, "Exam archives must be extracted"):
+            ingest.apply_plan(self.incoming, self.repo, plan)
+
     def test_prepare_normalizes_filename_and_screens_safe_text(self) -> None:
         self.make_course(
             "网络计算模式",
@@ -193,6 +322,7 @@ class IngestResourcesTest(unittest.TestCase):
         entry = plan["entries"][0]
 
         self.assertEqual(plan["schema_version"], 2)
+        self.assertEqual(entry["destination"]["category"], "复习资料")
         self.assertEqual(entry["destination"]["filename"], "网络计算模式-期末-复习.txt")
         self.assertEqual(entry["metadata"]["display_name"], "网络计算模式-期末-复习")
         self.assertEqual(entry["content_screening"]["risk_level"], "low")
@@ -289,6 +419,45 @@ class IngestResourcesTest(unittest.TestCase):
         self.assertIn('"mode": "prepare"', stdout.getvalue())
         data = json.loads(output.read_text(encoding="utf-8"))
         self.assertEqual(data["schema_version"], 2)
+
+    def test_load_json_accepts_utf8_bom(self) -> None:
+        path = self.root / "bom.json"
+        path.write_text('\ufeff{"entries": []}', encoding="utf-8")
+
+        data = ingest.load_json(path)
+
+        self.assertEqual(data, {"entries": []})
+
+    def test_audit_reports_category_readme_template_mismatch(self) -> None:
+        self.make_course(
+            "数据库原理及应用",
+            "历年试题",
+            "# 历年试题\n\n文件名|科目|考试形式|答案|文件类型|文件大小\n---|---|---|---|---|---\n",
+        )
+
+        report = ingest.audit_repository(self.repo)
+        mismatch_paths = {
+            Path(item["path"]).as_posix()
+            for item in report["category_readme_template_mismatches"]
+        }
+
+        self.assertIn(
+            (self.course_root / "数据库原理及应用" / "历年试题" / "README.md").as_posix(),
+            mismatch_paths,
+        )
+
+    def test_cli_audit_writes_json_output(self) -> None:
+        stdout = StringIO()
+        with redirect_stdout(stdout):
+            exit_code = ingest.main([
+                "--repo-root",
+                str(self.repo),
+                "audit",
+            ])
+
+        self.assertEqual(exit_code, 0)
+        data = json.loads(stdout.getvalue())
+        self.assertIn("category_readme_template_mismatches", data)
 
 
 if __name__ == "__main__":
