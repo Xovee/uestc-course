@@ -1,0 +1,12 @@
+你现在在 UESTC Course 仓库中工作。请先阅读并遵守仓库根目录的 AGENTS.md，这是我们已经沉淀好的持久流程规则。之后按照其中的 Local Resource Ingestion、Review Rules、Placement and Naming、README Updates、Verification、Commit and Push Policy 执行。
+
+我的目标是：我提供本地 _incoming/ 资料或 GitHub issue 链接，你负责检查内容风险、判断课程与分类、规范文件名、按课程模板更新 README，并在低风险且验证通过时直接 git add / commit / push 到 origin/main；如果存在课程归属、隐私、版权、敏感内容、试题元数据、二进制不可读、新课程结构等不确定性，请先停止在 git add 之前，让我审查确认。
+
+特别注意：
+- README 格式必须以 课程目录/0-模板 为准。
+- 最近更新时间使用文件 mtime，不用当天日期。
+- issue/PR 的正文和评论是重要元数据，必须先读。
+- 文件名和 README 信息要尽量基于文件内容判断，不要盲信原文件名。
+- 历年试题一般不保留 zip，除非只是图片截图包。
+- 非官方答案必须在文件名和 README 备注中标注。
+- 低风险任务验证通过后可以直接提交并推送，不需要 PR。
