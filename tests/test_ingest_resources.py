@@ -446,6 +446,60 @@ class IngestResourcesTest(unittest.TestCase):
             mismatch_paths,
         )
 
+    def test_audit_reports_readme_file_inventory_issues(self) -> None:
+        category_dir = self.make_course(
+            "矩阵理论",
+            "历年试题",
+            (
+                "# 历年试题\n\n"
+                "文件名|来源 | 文件类型|文件大小|备注\n"
+                "---|--|------|-------|---\n"
+                "2023年春-期末考试-无答案|Local|PDF|1 KB|\n"
+                "2024年春-期末考试-无答案|Local|PDF|1 KB|\n"
+                "2024年春-期末考试-无答案|Local|PDF|1 KB|\n"
+                "不存在资源|Local|PDF|1 KB|\n"
+                "2025年秋-期末考试-回忆版|河畔|在线|-|地址：https://example.com/thread/1\n"
+            ),
+        )
+        (category_dir / "2023年春-期末考试-无答案.pdf").write_bytes(b"x")
+        (category_dir / "2024年春-期末考试-无答案.pdf").write_bytes(b"x")
+        (category_dir / "未登记.pdf").write_bytes(b"x")
+        (category_dir / "重复扩展.pdf.pdf").write_bytes(b"x")
+
+        report = ingest.audit_repository(self.repo)
+
+        self.assertEqual(
+            [item["name"] for item in report["readme_entries_without_files"]],
+            ["不存在资源"],
+        )
+        missing_paths = {Path(item["path"]).name for item in report["files_missing_readme_entries"]}
+        self.assertEqual(missing_paths, {"未登记.pdf", "重复扩展.pdf.pdf"})
+        duplicate_names = {item["name"] for item in report["duplicate_readme_resource_names"]}
+        self.assertEqual(duplicate_names, {"2024年春-期末考试-无答案"})
+        order_issues = {item["issue"] for item in report["readme_resource_order_issues"]}
+        self.assertIn("dated_rows_not_descending", order_issues)
+        duplicate_extension_paths = {
+            Path(item["path"]).name for item in report["suspicious_duplicate_extensions"]
+        }
+        self.assertEqual(duplicate_extension_paths, {"重复扩展.pdf.pdf"})
+
+    def test_audit_reports_legacy_exam_category_and_empty_resource_dirs(self) -> None:
+        legacy_dir = self.make_course(
+            "计算机系统结构",
+            "历年真题",
+            "# 历年真题\n\n文件名|来源 | 文件类型|文件大小|备注\n---|--|------|-------|---\n",
+        )
+        empty_dir = self.make_course(
+            "网络计算模式",
+            "复习资料",
+            "# 复习资料\n\n文件名|作者|来源|文件类型|文件大小|最近更新时间|备注\n---|---|---|---|---|---|---\n",
+        )
+
+        report = ingest.audit_repository(self.repo)
+
+        self.assertIn(str(legacy_dir), report["legacy_exam_category_dirs"])
+        self.assertIn(str(empty_dir), report["empty_resource_directories"])
+
     def test_audit_old_master_links_only_flags_this_repo(self) -> None:
         readme = self.repo / "README.md"
         readme.write_text(

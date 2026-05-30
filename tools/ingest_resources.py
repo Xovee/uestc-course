@@ -31,6 +31,7 @@ DEFAULT_INCOMING = "_incoming"
 CATEGORY_REVIEW = "复习资料"
 CATEGORY_EXAMS = "历年试题"
 CATEGORY_ASSIGNMENTS = "作业"
+TERM_SORT_RANK = {"春": 1, "夏": 2, "秋": 3, "冬": 4}
 
 EXAM_KEYWORDS = ("考试", "试题", "真题", "期中", "期末", "考题", "试卷", "A卷", "B卷")
 ASSIGNMENT_KEYWORDS = ("作业", "实验", "报告", "随堂测试", "课堂测试", "练习")
@@ -46,6 +47,16 @@ AUDIO_EXTENSIONS = {".mp3", ".wav", ".m4a", ".flac"}
 VIDEO_EXTENSIONS = {".mp4", ".mov", ".avi", ".mkv"}
 TEXT_SCAN_EXTENSIONS = {".txt", ".md", ".csv", ".tsv"}
 DOCX_EXTENSION = ".docx"
+KNOWN_RESOURCE_EXTENSIONS = (
+    {".pdf", ".xls", ".xlsx"}
+    | IMAGE_EXTENSIONS
+    | WORD_EXTENSIONS
+    | PPT_EXTENSIONS
+    | ARCHIVE_EXTENSIONS
+    | TEXT_EXTENSIONS
+    | AUDIO_EXTENSIONS
+    | VIDEO_EXTENSIONS
+)
 
 PRIVACY_PATTERNS = {
     "phone_number": re.compile(r"(?<!\d)1[3-9]\d{9}(?!\d)"),
@@ -636,13 +647,19 @@ def normalized_headers(headers: list[str]) -> list[str]:
 
 
 def find_file_table(lines: list[str]) -> tuple[int, int, list[str]] | None:
+    tables = find_file_tables(lines)
+    return tables[0] if tables else None
+
+
+def find_file_tables(lines: list[str]) -> list[tuple[int, int, list[str]]]:
+    tables = []
     for index in range(len(lines) - 1):
         if "|" not in lines[index] or not is_separator_row(lines[index + 1]):
             continue
         headers = split_table_row(lines[index])
         if "文件名" in normalized_headers(headers):
-            return index, index + 1, headers
-    return None
+            tables.append((index, index + 1, headers))
+    return tables
 
 
 def count_file_tables(readme_path: Path) -> int:
@@ -652,14 +669,7 @@ def count_file_tables(readme_path: Path) -> int:
         lines = read_text(readme_path).splitlines()
     except UnicodeDecodeError:
         return 0
-    count = 0
-    for index in range(len(lines) - 1):
-        if "|" not in lines[index] or not is_separator_row(lines[index + 1]):
-            continue
-        headers = split_table_row(lines[index])
-        if "文件名" in normalized_headers(headers):
-            count += 1
-    return count
+    return len(find_file_tables(lines))
 
 
 def read_template(repo_root: Path, *relative_parts: str) -> str | None:
@@ -898,6 +908,13 @@ def audit_repository(repo_root: Path) -> dict[str, Any]:
     return {
         "missing_category_readmes": missing_category_readmes(course_root),
         "category_readme_template_mismatches": category_readme_template_mismatches(repo_root),
+        "legacy_exam_category_dirs": legacy_exam_category_dirs(course_root),
+        "empty_resource_directories": empty_resource_directories(course_root),
+        "suspicious_duplicate_extensions": suspicious_duplicate_extensions(course_root),
+        "duplicate_readme_resource_names": duplicate_readme_resource_names(course_root),
+        "readme_resource_order_issues": readme_resource_order_issues(course_root),
+        "readme_entries_without_files": readme_entries_without_files(course_root),
+        "files_missing_readme_entries": files_missing_readme_entries(course_root),
         "top_level_readme_issues": top_level_readme_issues(repo_root),
         "template_missing_targets": template_missing_targets(repo_root),
         "missing_relative_markdown_links": missing_relative_markdown_links(repo_root),
@@ -907,16 +924,28 @@ def audit_repository(repo_root: Path) -> dict[str, Any]:
     }
 
 
-def missing_category_readmes(course_root: Path) -> list[str]:
+def course_dirs(course_root: Path) -> list[Path]:
     if not course_root.exists():
         return []
+    return sorted(
+        path
+        for path in course_root.iterdir()
+        if path.is_dir() and not path.name.startswith("0-")
+    )
+
+
+def category_dirs(course_root: Path) -> list[Path]:
+    categories = []
+    for course in course_dirs(course_root):
+        categories.extend(sorted(path for path in course.iterdir() if path.is_dir()))
+    return categories
+
+
+def missing_category_readmes(course_root: Path) -> list[str]:
     missing = []
-    for course in course_root.iterdir():
-        if not course.is_dir() or course.name.startswith("0-"):
-            continue
-        for category_dir in course.iterdir():
-            if category_dir.is_dir() and not (category_dir / "README.md").exists():
-                missing.append(str(category_dir))
+    for category_dir in category_dirs(course_root):
+        if not (category_dir / "README.md").exists():
+            missing.append(str(category_dir))
     return sorted(missing)
 
 
@@ -969,6 +998,281 @@ def category_readme_template_mismatches(repo_root: Path) -> list[dict[str, Any]]
                     }
                 )
     return sorted(mismatches, key=lambda item: item["path"])
+
+
+def readme_file_rows(readme_path: Path) -> list[dict[str, Any]]:
+    if not readme_path.exists():
+        return []
+    try:
+        lines = read_text(readme_path).splitlines()
+    except UnicodeDecodeError:
+        return []
+    rows = []
+    for table_number, table in enumerate(find_file_tables(lines), start=1):
+        header_index, separator_index, headers = table
+        normalized = normalized_headers(headers)
+        try:
+            name_index = normalized.index("文件名")
+        except ValueError:
+            continue
+        index = separator_index + 1
+        while index < len(lines):
+            line = lines[index]
+            if not line.strip() or "|" not in line:
+                break
+            cells = split_table_row(line)
+            if (
+                index + 1 < len(lines)
+                and is_separator_row(lines[index + 1])
+                and "文件名" in normalized_headers(cells)
+            ):
+                break
+            rows.append(
+                {
+                    "path": str(readme_path),
+                    "line": index + 1,
+                    "table": table_number,
+                    "table_start_line": header_index + 1,
+                    "headers": headers,
+                    "cells": cells,
+                    "name": cells[name_index] if len(cells) > name_index else "",
+                }
+            )
+            index += 1
+    return rows
+
+
+def row_cell(row: dict[str, Any], header: str) -> str:
+    normalized = normalized_headers(list(row.get("headers", [])))
+    try:
+        index = normalized.index(header)
+    except ValueError:
+        return ""
+    cells = list(row.get("cells", []))
+    return cells[index] if len(cells) > index else ""
+
+
+def resource_name_keys(name: str) -> set[str]:
+    name = name.strip()
+    if not name:
+        return set()
+    keys = {name.casefold()}
+    path = Path(name)
+    suffix = path.suffix.casefold()
+    if suffix in KNOWN_RESOURCE_EXTENSIONS:
+        keys.add(path.stem.casefold())
+        inner_path = Path(path.stem)
+        if inner_path.suffix.casefold() == suffix:
+            keys.add(inner_path.stem.casefold())
+    return keys
+
+
+def resource_display_key(name: str) -> str:
+    keys = resource_name_keys(name)
+    if not keys:
+        return ""
+    return min(keys, key=len)
+
+
+def resource_children(category_dir: Path) -> list[Path]:
+    if not category_dir.exists():
+        return []
+    return sorted(
+        child
+        for child in category_dir.iterdir()
+        if child.name not in {"README.md", ".gitkeep"}
+    )
+
+
+def readme_row_is_online(row: dict[str, Any]) -> bool:
+    file_type = row_cell(row, "文件类型").casefold()
+    source = row_cell(row, "来源").casefold()
+    size = row_cell(row, "文件大小").strip()
+    remark = row_cell(row, "备注")
+    return (
+        file_type in {"在线", "链接", "url"}
+        or source in {"在线", "链接", "url"}
+        or size == "-"
+        or "http://" in remark
+        or "https://" in remark
+    )
+
+
+def category_readme_rows(category_dir: Path) -> list[dict[str, Any]]:
+    return readme_file_rows(category_dir / "README.md")
+
+
+def legacy_exam_category_dirs(course_root: Path) -> list[str]:
+    return sorted(str(path) for path in category_dirs(course_root) if path.name == "历年真题")
+
+
+def empty_resource_directories(course_root: Path) -> list[str]:
+    return sorted(
+        str(category_dir)
+        for category_dir in category_dirs(course_root)
+        if not resource_children(category_dir)
+    )
+
+
+def suspicious_duplicate_extensions(course_root: Path) -> list[dict[str, Any]]:
+    if not course_root.exists():
+        return []
+    results = []
+    for path in sorted(course_root.rglob("*")):
+        if not path.is_file() or path.name == "README.md":
+            continue
+        try:
+            first_part = path.relative_to(course_root).parts[0]
+        except ValueError:
+            first_part = ""
+        if first_part.startswith("0-"):
+            continue
+        parts = path.name.casefold().split(".")
+        if len(parts) >= 3 and parts[-1] and parts[-1] == parts[-2]:
+            results.append({"path": str(path), "extension": f".{parts[-1]}"})
+    return results
+
+
+def duplicate_readme_resource_names(course_root: Path) -> list[dict[str, Any]]:
+    results = []
+    for category_dir in category_dirs(course_root):
+        seen: dict[str, dict[str, Any]] = {}
+        for row in category_readme_rows(category_dir):
+            name = str(row.get("name", "")).strip()
+            key = resource_display_key(name)
+            if not key:
+                continue
+            if key in seen:
+                previous = seen[key]
+                results.append(
+                    {
+                        "path": str(category_dir / "README.md"),
+                        "name": name,
+                        "line": row["line"],
+                        "previous_line": previous["line"],
+                    }
+                )
+            else:
+                seen[key] = row
+    return sorted(results, key=lambda item: (item["path"], item["line"]))
+
+
+def readme_resource_order_issues(course_root: Path) -> list[dict[str, Any]]:
+    results = []
+    for category_dir in category_dirs(course_root):
+        readme = category_dir / "README.md"
+        if not readme.exists():
+            continue
+        rows_by_table: dict[int, list[dict[str, Any]]] = {}
+        for row in category_readme_rows(category_dir):
+            rows_by_table.setdefault(int(row["table"]), []).append(row)
+        for table_number, rows in rows_by_table.items():
+            previous_dated: dict[str, Any] | None = None
+            first_undated: dict[str, Any] | None = None
+            for row in rows:
+                name = str(row.get("name", ""))
+                sort_key = resource_date_key(name)
+                if sort_key is None:
+                    if first_undated is None:
+                        first_undated = row
+                    continue
+                if first_undated is not None:
+                    results.append(
+                        {
+                            "path": str(readme),
+                            "table": table_number,
+                            "issue": "undated_row_before_dated_row",
+                            "line": row["line"],
+                            "previous_undated_line": first_undated["line"],
+                        }
+                    )
+                    first_undated = None
+                if previous_dated and resource_key_is_later(sort_key, previous_dated["sort_key"]):
+                    results.append(
+                        {
+                            "path": str(readme),
+                            "table": table_number,
+                            "issue": "dated_rows_not_descending",
+                            "line": row["line"],
+                            "previous_line": previous_dated["line"],
+                            "name": name,
+                            "previous_name": previous_dated["name"],
+                        }
+                    )
+                previous_dated = {"line": row["line"], "name": name, "sort_key": sort_key}
+    return sorted(results, key=lambda item: (item["path"], item["line"]))
+
+
+def resource_date_key(text: str) -> tuple[int, int | None] | None:
+    academic = re.search(
+        r"((?:19|20)\d{2})\s*[-—~至]\s*((?:19|20)\d{2})\s*学年\s*第([一二12])学期",
+        text,
+    )
+    if academic:
+        start_year = int(academic.group(1))
+        end_year = int(academic.group(2))
+        semester = academic.group(3)
+        if semester in {"一", "1"}:
+            return start_year, TERM_SORT_RANK["秋"]
+        if semester in {"二", "2"}:
+            return end_year, TERM_SORT_RANK["春"]
+    match = re.search(r"((?:19|20)\d{2})\s*年?\s*([春夏秋冬])?", text)
+    if not match:
+        return None
+    year = int(match.group(1))
+    term = match.group(2)
+    return year, TERM_SORT_RANK.get(term) if term else None
+
+
+def resource_key_is_later(current: tuple[int, int | None], previous: tuple[int, int | None]) -> bool:
+    current_year, current_term = current
+    previous_year, previous_term = previous
+    if current_year != previous_year:
+        return current_year > previous_year
+    if current_term is not None and previous_term is not None:
+        return current_term > previous_term
+    return False
+
+
+def readme_entries_without_files(course_root: Path) -> list[dict[str, Any]]:
+    results = []
+    for category_dir in category_dirs(course_root):
+        actual_keys = set()
+        for child in resource_children(category_dir):
+            actual_keys.update(resource_name_keys(child.name))
+        for row in category_readme_rows(category_dir):
+            name = str(row.get("name", "")).strip()
+            if not name or readme_row_is_online(row):
+                continue
+            if resource_name_keys(name).isdisjoint(actual_keys):
+                results.append(
+                    {
+                        "path": str(category_dir / "README.md"),
+                        "line": row["line"],
+                        "name": name,
+                    }
+                )
+    return sorted(results, key=lambda item: (item["path"], item["line"]))
+
+
+def files_missing_readme_entries(course_root: Path) -> list[dict[str, Any]]:
+    results = []
+    for category_dir in category_dirs(course_root):
+        readme = category_dir / "README.md"
+        if not readme.exists():
+            continue
+        readme_keys = set()
+        for row in category_readme_rows(category_dir):
+            readme_keys.update(resource_name_keys(str(row.get("name", ""))))
+        for child in resource_children(category_dir):
+            if resource_name_keys(child.name).isdisjoint(readme_keys):
+                results.append(
+                    {
+                        "path": str(child),
+                        "readme": str(readme),
+                    }
+                )
+    return sorted(results, key=lambda item: item["path"])
 
 
 def template_missing_targets(repo_root: Path) -> list[str]:

@@ -118,6 +118,15 @@ python tools\ingest_resources.py prepare --incoming _incoming --output _incoming
   the rest in `备注`.
 - Do not auto-write `教材` entries unless a separate schema is designed.
 
+## Audit Coverage
+
+`python tools\ingest_resources.py audit` should report repository consistency
+issues without modifying files. Keep coverage for README/template mismatches,
+legacy `历年真题` category directories, empty resource directories, suspicious
+duplicate file extensions such as `.pdf.pdf`, duplicate README `文件名` rows,
+README row chronological ordering, README rows without local files, and local
+files or folders missing README rows.
+
 ## Verification
 
 Run these after changing the automation code or tests:
