@@ -17,7 +17,7 @@
 近代史复习鸡腿-PDF版|Unknown||PDF|0.85 MB|2024年5月10日|
 近代史复习鸡腿-Word版|Unknown||Word|44 KB|2024年5月10日|
 近代史每章重点|Unknown||Word|61 KB|2022年12月11日|来自[河畔](https://bbs.uestc.edu.cn/forum.php?mod=viewthread&tid=2329991&extra=page%3D1)
-近代史时间轴|Unknown||PDF|0.31 MB|2021年6月29日|
+时间轴|Unknown||PDF|0.31 MB|2021年6月29日|
 近代史复习2|Unknown||Word|36.8 KB|2021年6月29日|
 大题整理|Unknown||Word|45.9 KB|2021年6月28日|
 近代史背诵资料|Unknown||PDF|7.3 MB|2020年8月28日|来自[河畔](https://bbs.uestc.edu.cn/forum.php?mod=viewthread&tid=2329991&extra=page%3D1)

@@ -467,12 +467,27 @@ class IngestResourcesTest(unittest.TestCase):
                 "2023年春-期末考试-无答案|Local|PDF|1 KB|\n"
                 "2024年春-期末考试-无答案|Local|PDF|1 KB|\n"
                 "2024年春-期末考试-无答案|Local|PDF|1 KB|\n"
+                "矩阵理论-2025年春-作业1|Local|Word|1 KB|\n"
+                "课程测试1-答案|Local|PDF|1 KB|\n"
+                "高级网络计算-秦臻|Local|Word|1 KB|\n"
+                "Anki牌组|Local|APKG|1 KB|\n"
+                "GET-2016年春|Local|Folder|1 KB|\n"
+                "复习提纲2014|Local|PPT|1 KB|\n"
                 "不存在资源|Local|PDF|1 KB|\n"
+                "在线文档|Local|Online Doc|-|语雀文档\n"
+                "暂无试题|Local|-|-|暂无资源\n"
                 "2025年秋-期末考试-回忆版|河畔|在线|-|地址：https://example.com/thread/1\n"
             ),
         )
         (category_dir / "2023年春-期末考试-无答案.pdf").write_bytes(b"x")
         (category_dir / "2024年春-期末考试-无答案.pdf").write_bytes(b"x")
+        (category_dir / "2025年春-作业1.docx").write_bytes(b"x")
+        (category_dir / "课程测试1答案.pdf").write_bytes(b"x")
+        (category_dir / "高级网络计算—秦臻.docx").write_bytes(b"x")
+        (category_dir / "Anki牌组.apkg").write_bytes(b"x")
+        (category_dir / "GET-2016春").mkdir()
+        (category_dir / "复习题纲2014.ppt").write_bytes(b"x")
+        (category_dir / "assets").mkdir()
         (category_dir / "未登记.pdf").write_bytes(b"x")
         (category_dir / "重复扩展.pdf.pdf").write_bytes(b"x")
 
@@ -492,6 +507,24 @@ class IngestResourcesTest(unittest.TestCase):
             Path(item["path"]).name for item in report["suspicious_duplicate_extensions"]
         }
         self.assertEqual(duplicate_extension_paths, {"重复扩展.pdf.pdf"})
+
+    def test_audit_matches_leading_date_prefix_for_non_exam_resources(self) -> None:
+        category_dir = self.make_course(
+            "金融衍生工具",
+            "作业",
+            (
+                "# 作业\n\n"
+                "文件名|文件类型|文件大小|备注\n"
+                "---|---|---|---\n"
+                "2024春-课程实验|XLSX|1 KB|\n"
+            ),
+        )
+        (category_dir / "课程实验.xlsx").write_bytes(b"x")
+
+        report = ingest.audit_repository(self.repo)
+
+        self.assertEqual(report["readme_entries_without_files"], [])
+        self.assertEqual(report["files_missing_readme_entries"], [])
 
     def test_audit_reports_legacy_exam_category_and_empty_resource_dirs(self) -> None:
         legacy_dir = self.make_course(

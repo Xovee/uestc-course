@@ -49,8 +49,9 @@ AUDIO_EXTENSIONS = {".mp3", ".wav", ".m4a", ".flac"}
 VIDEO_EXTENSIONS = {".mp4", ".mov", ".avi", ".mkv"}
 TEXT_SCAN_EXTENSIONS = {".txt", ".md", ".csv", ".tsv"}
 DOCX_EXTENSION = ".docx"
+SUPPORT_RESOURCE_DIR_NAMES = {"assets", "img", "imgs", "image", "images"}
 KNOWN_RESOURCE_EXTENSIONS = (
-    {".pdf", ".xls", ".xlsx"}
+    {".pdf", ".xls", ".xlsx", ".html", ".htm", ".py", ".apkg"}
     | IMAGE_EXTENSIONS
     | WORD_EXTENSIONS
     | PPT_EXTENSIONS
@@ -59,6 +60,7 @@ KNOWN_RESOURCE_EXTENSIONS = (
     | AUDIO_EXTENSIONS
     | VIDEO_EXTENSIONS
 )
+RESOURCE_KEY_NORMALIZE_PATTERN = re.compile(r"[^0-9A-Za-z\u4e00-\u9fff]+")
 
 PRIVACY_PATTERNS = {
     "phone_number": re.compile(r"(?<!\d)1[3-9]\d{9}(?!\d)"),
@@ -1062,23 +1064,97 @@ def row_cell(row: dict[str, Any], header: str) -> str:
     return cells[index] if len(cells) > index else ""
 
 
-def resource_name_keys(name: str) -> set[str]:
+def resource_name_keys(
+    name: str,
+    course: str | None = None,
+    *,
+    strip_leading_date: bool = False,
+) -> set[str]:
     name = name.strip()
     if not name:
         return set()
-    keys = {name.casefold()}
-    path = Path(name)
-    suffix = path.suffix.casefold()
-    if suffix in KNOWN_RESOURCE_EXTENSIONS:
-        keys.add(path.stem.casefold())
-        inner_path = Path(path.stem)
-        if inner_path.suffix.casefold() == suffix:
-            keys.add(inner_path.stem.casefold())
+    candidates = resource_name_candidates(name)
+    keys: set[str] = set()
+    for candidate in candidates:
+        keys.update(resource_key_variants(candidate, course, strip_leading_date=strip_leading_date))
     return keys
 
 
+def resource_exact_name_keys(name: str) -> set[str]:
+    name = name.strip()
+    if not name:
+        return set()
+    return {candidate.casefold() for candidate in resource_name_candidates(name)}
+
+
+def resource_name_candidates(name: str) -> list[str]:
+    candidates = [name]
+    path = Path(name)
+    suffix = path.suffix.casefold()
+    if suffix in KNOWN_RESOURCE_EXTENSIONS:
+        candidates.append(path.stem)
+        inner_path = Path(path.stem)
+        if inner_path.suffix.casefold() == suffix:
+            candidates.append(inner_path.stem)
+    return candidates
+
+
+def resource_key_variants(
+    value: str,
+    course: str | None = None,
+    *,
+    strip_leading_date: bool = False,
+) -> set[str]:
+    keys = {value.casefold()}
+    normalized = normalized_resource_key(value)
+    if normalized:
+        keys.add(normalized)
+        keys.update(equivalent_resource_key_spellings(normalized))
+        without_year_before_term = re.sub(r"年(?=[春夏秋冬上下])", "", normalized)
+        if without_year_before_term != normalized:
+            keys.add(without_year_before_term)
+            keys.update(equivalent_resource_key_spellings(without_year_before_term))
+        if strip_leading_date:
+            without_leading_date = resource_key_without_leading_date(normalized)
+            if without_leading_date != normalized:
+                keys.add(without_leading_date)
+        if course:
+            course_key = normalized_resource_key(course)
+            if course_key and normalized.startswith(course_key):
+                stripped = normalized[len(course_key) :]
+                if stripped:
+                    keys.add(stripped)
+                    keys.update(equivalent_resource_key_spellings(stripped))
+                    stripped_without_year = re.sub(r"年(?=[春夏秋冬上下])", "", stripped)
+                    if stripped_without_year != stripped:
+                        keys.add(stripped_without_year)
+                        keys.update(equivalent_resource_key_spellings(stripped_without_year))
+                    if strip_leading_date:
+                        stripped_without_leading_date = resource_key_without_leading_date(stripped)
+                        if stripped_without_leading_date != stripped:
+                            keys.add(stripped_without_leading_date)
+    return keys
+
+
+def normalized_resource_key(value: str) -> str:
+    return RESOURCE_KEY_NORMALIZE_PATTERN.sub("", value).casefold()
+
+
+def equivalent_resource_key_spellings(value: str) -> set[str]:
+    variants = set()
+    if "题纲" in value:
+        variants.add(value.replace("题纲", "提纲"))
+    if "提纲" in value:
+        variants.add(value.replace("提纲", "题纲"))
+    return variants
+
+
+def resource_key_without_leading_date(value: str) -> str:
+    return re.sub(r"^(?:19|20)\d{2}年?[春夏秋冬上下]", "", value, count=1)
+
+
 def resource_display_key(name: str) -> str:
-    keys = resource_name_keys(name)
+    keys = resource_exact_name_keys(name)
     if not keys:
         return ""
     return min(keys, key=len)
@@ -1090,8 +1166,12 @@ def resource_children(category_dir: Path) -> list[Path]:
     return sorted(
         child
         for child in category_dir.iterdir()
-        if child.name not in {"README.md", ".gitkeep"}
+        if child.name not in {"README.md", ".gitkeep"} and not is_support_resource_child(child)
     )
+
+
+def is_support_resource_child(path: Path) -> bool:
+    return path.is_dir() and path.name.casefold() in SUPPORT_RESOURCE_DIR_NAMES
 
 
 def readme_row_is_online(row: dict[str, Any]) -> bool:
@@ -1100,10 +1180,17 @@ def readme_row_is_online(row: dict[str, Any]) -> bool:
     remark = row_cell(row, "备注")
     return (
         file_type in {"在线", "链接", "url"}
+        or "online" in file_type
         or source in {"在线", "链接", "url"}
+        or "online" in source
         or "http://" in remark
         or "https://" in remark
     )
+
+
+def readme_row_is_placeholder(row: dict[str, Any]) -> bool:
+    remark = row_cell(row, "备注")
+    return any(marker in remark for marker in ("暂无资源", "无本地资源"))
 
 
 def category_readme_rows(category_dir: Path) -> list[dict[str, Any]]:
@@ -1300,14 +1387,16 @@ def resource_key_is_later(current: tuple[int, int | None], previous: tuple[int, 
 def readme_entries_without_files(course_root: Path) -> list[dict[str, Any]]:
     results = []
     for category_dir in audited_resource_category_dirs(course_root):
+        course = category_dir.parent.name
+        strip_leading_date = category_dir.name not in {CATEGORY_EXAMS, "历年真题"}
         actual_keys = set()
         for child in resource_children(category_dir):
-            actual_keys.update(resource_name_keys(child.name))
+            actual_keys.update(resource_name_keys(child.name, course, strip_leading_date=strip_leading_date))
         for row in category_readme_rows(category_dir):
             name = str(row.get("name", "")).strip()
-            if not name or readme_row_is_online(row):
+            if not name or readme_row_is_online(row) or readme_row_is_placeholder(row):
                 continue
-            if resource_name_keys(name).isdisjoint(actual_keys):
+            if resource_name_keys(name, course, strip_leading_date=strip_leading_date).isdisjoint(actual_keys):
                 results.append(
                     {
                         "path": str(category_dir / "README.md"),
@@ -1324,11 +1413,15 @@ def files_missing_readme_entries(course_root: Path) -> list[dict[str, Any]]:
         readme = category_dir / "README.md"
         if not readme.exists():
             continue
+        course = category_dir.parent.name
+        strip_leading_date = category_dir.name not in {CATEGORY_EXAMS, "历年真题"}
         readme_keys = set()
         for row in category_readme_rows(category_dir):
-            readme_keys.update(resource_name_keys(str(row.get("name", ""))))
+            readme_keys.update(
+                resource_name_keys(str(row.get("name", "")), course, strip_leading_date=strip_leading_date)
+            )
         for child in resource_children(category_dir):
-            if resource_name_keys(child.name).isdisjoint(readme_keys):
+            if resource_name_keys(child.name, course, strip_leading_date=strip_leading_date).isdisjoint(readme_keys):
                 results.append(
                     {
                         "path": str(child),

@@ -4,6 +4,7 @@
 ---|---|---|---|---|---|---
 2018矩阵理论试题评分细则|Unknown||PDF|446 KB|2021年7月7日|
 河畔复习指北|Unknown||TXT|5 KB|2025年5月17日|
+矩阵理论学习指导|Unknown||PDF|12.51 MB|2025年2月8日|
 矩阵理论笔记2|Unknown||PDF|53.6 MB|2021年7月7日|
 矩阵理论复习题|Unknown||PDF|24.1 MB|2021年7月7日|
 矩阵理论笔记1|噬天||JPG|22.1 MB|2018年12月17日|笔记的照片，来自[河畔](https://bbs.uestc.edu.cn/forum.php?mod=viewthread&tid=1745369&extra=page%3D1)
