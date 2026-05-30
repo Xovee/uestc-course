@@ -15,6 +15,11 @@ python tools\ingest_resources.py prepare --incoming _incoming --output _incoming
 - Review `_incoming/plan.json` before applying anything.
 - Do not delete files from `_incoming/`; the ingestion flow preserves source
   files by default.
+- Keep only active, not-yet-reviewed batches in `_incoming/`. After a batch is
+  organized and either committed or explicitly approved for cleanup, delete its
+  original source files from `_incoming/` instead of archiving them. If
+  `_incoming/` contains old batches, run the prepare command against the current
+  batch subfolder to avoid mixing unrelated resources into one plan.
 
 ## Review Rules
 
@@ -100,6 +105,9 @@ python tools\ingest_resources.py prepare --incoming _incoming --output _incoming
 - Use existing source vocabulary where possible, for example `GitHub Issue`,
   `PR`, `河畔`, or `Local`; do not invent source labels such as `Issue #153`.
 - Read the target README's actual table header and fill columns dynamically.
+- Sort README resource rows in reverse chronological order when the filename or
+  verified metadata contains a year/term/date. Keep undated rows after dated
+  rows unless the target README already has a stronger local convention.
 - Do not reformat, reorder, or clean up existing historical tables.
 - If a README has multiple `文件名` tables, do not auto-insert; ask the user.
 - If the user names an author but the target README has no `作者` column, record
