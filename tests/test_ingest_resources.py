@@ -446,6 +446,24 @@ class IngestResourcesTest(unittest.TestCase):
             mismatch_paths,
         )
 
+    def test_audit_old_master_links_only_flags_this_repo(self) -> None:
+        readme = self.repo / "README.md"
+        readme.write_text(
+            "[old self](https://github.com/Xovee/uestc-course/tree/master/课程目录)\n"
+            "[external](https://github.com/example/project/tree/master/docs)\n",
+            encoding="utf-8",
+        )
+
+        report = ingest.audit_repository(self.repo)
+
+        self.assertEqual(len(report["old_master_links"]), 1)
+        self.assertEqual(Path(report["old_master_links"][0]["path"]), readme)
+
+    def test_audit_placeholder_download_links_ignores_template_course(self) -> None:
+        report = ingest.audit_repository(self.repo)
+
+        self.assertEqual(report["placeholder_download_links"], [])
+
     def test_cli_audit_writes_json_output(self) -> None:
         stdout = StringIO()
         with redirect_stdout(stdout):

@@ -2,7 +2,7 @@
 
 ## 相关课程
 
-- [操作系统基础](https://github.com/Xovee/uestc-course/tree/master/%E8%AF%BE%E7%A8%8B%E7%9B%AE%E5%BD%95/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%80)
+- [操作系统基础](https://github.com/Xovee/uestc-course/tree/main/%E8%AF%BE%E7%A8%8B%E7%9B%AE%E5%BD%95/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E5%9F%BA%E7%A1%80)
 
 还有很多操作系统相关课程，请在课程目录搜索。
 

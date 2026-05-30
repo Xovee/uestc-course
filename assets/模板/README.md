@@ -15,4 +15,4 @@
 
 模板下载：
 
-- [点击链接下载**课程**模板文件夹](https://github.com/Xovee/uestc-course/raw/master/%E4%BB%93%E5%BA%93%E8%B5%84%E6%BA%90/%E6%A8%A1%E6%9D%BF/%E8%AF%BE%E7%A8%8B%E5%90%8D.zip)
+- [点击链接查看**课程**模板文件夹](../../课程目录/0-模板)

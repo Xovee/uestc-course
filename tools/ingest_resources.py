@@ -1034,13 +1034,14 @@ def iter_markdown_files(root: Path) -> list[Path]:
 
 def old_master_links(repo_root: Path) -> list[dict[str, Any]]:
     results = []
+    own_repo_old_branch = re.compile(r"github\.com/Xovee/uestc-course/(?:tree|raw)/master")
     for path in iter_markdown_files(repo_root):
         try:
             lines = read_text(path).splitlines()
         except UnicodeDecodeError:
             continue
         for line_number, line in enumerate(lines, start=1):
-            if "tree/master" in line or "raw/master" in line:
+            if own_repo_old_branch.search(line):
                 results.append({"path": str(path), "line": line_number})
     return results
 
@@ -1050,6 +1051,8 @@ def placeholder_download_links(course_root: Path) -> list[dict[str, Any]]:
         return []
     results = []
     for readme in course_root.glob("*/README.md"):
+        if readme.parent.name.startswith("0-"):
+            continue
         try:
             content = read_text(readme)
         except UnicodeDecodeError:
