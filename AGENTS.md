@@ -13,6 +13,8 @@ python tools\ingest_resources.py prepare --incoming _incoming --output _incoming
 ```
 
 - Review `_incoming/plan.json` before applying anything.
+- The prepare/scan flow ignores generated `_incoming/plan.json` files; do not
+  treat them as resources to ingest.
 - Do not delete files from `_incoming/`; the ingestion flow preserves source
   files by default.
 - Keep only active, not-yet-reviewed batches in `_incoming/`. After a batch is
@@ -116,7 +118,21 @@ python tools\ingest_resources.py prepare --incoming _incoming --output _incoming
 - If exam metadata such as `闭卷`, `A卷`, `回忆版`, or `非官方答案` has no matching
   template column, encode the essential answer status in the filename and put
   the rest in `备注`.
+- README table cell values should be single-line Markdown-table-safe text.
+  Replace embedded newlines with spaces and avoid raw `|` characters inside
+  cells.
 - Do not auto-write `教材` entries unless a separate schema is designed.
+
+## Apply Safety
+
+- Before applying a reviewed plan, the tool should preflight all `apply: true`
+  entries before copying files or editing README files.
+- Reject plans that would write outside `课程目录`, reuse one destination path
+  for multiple entries, use path separators in course/category/filename fields,
+  use an empty or root `_incoming` source, or target the legacy `历年真题`
+  category instead of canonical `历年试题`.
+- Keep the apply step all-or-nothing for validation errors: if one active entry
+  is invalid, no earlier active entry should have been copied first.
 
 ## Audit Coverage
 

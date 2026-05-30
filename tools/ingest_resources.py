@@ -27,6 +27,7 @@ from xml.etree import ElementTree
 
 COURSE_ROOT_NAME = "课程目录"
 DEFAULT_INCOMING = "_incoming"
+GENERATED_INCOMING_FILE_NAMES = {"plan.json"}
 
 CATEGORY_REVIEW = "复习资料"
 CATEGORY_EXAMS = "历年试题"
@@ -116,6 +117,16 @@ class CourseMatch:
     course: str | None
     candidates: list[str]
     warnings: list[str]
+
+
+@dataclass(frozen=True)
+class ApplyAction:
+    source: Path
+    target: Path
+    target_dir: Path
+    course: str
+    category: str
+    metadata: dict[str, Any]
 
 
 def repo_root_from_script() -> Path:
@@ -572,9 +583,7 @@ def scan_resources(incoming: Path, repo_root: Path) -> dict[str, Any]:
 
     courses = list_courses(repo_root)
     entries = []
-    for source in sorted(incoming.iterdir(), key=lambda path: path.name.casefold()):
-        if source.name.startswith("."):
-            continue
+    for source in incoming_resource_entries(incoming):
         entries.append(build_entry(source, incoming, repo_root, courses))
 
     return {
@@ -597,9 +606,7 @@ def prepare_resources(incoming: Path, repo_root: Path) -> dict[str, Any]:
 
     courses = list_courses(repo_root)
     entries = []
-    for source in sorted(incoming.iterdir(), key=lambda path: path.name.casefold()):
-        if source.name.startswith("."):
-            continue
+    for source in incoming_resource_entries(incoming):
         entries.append(build_entry(source, incoming, repo_root, courses, prepare=True))
 
     return {
@@ -612,6 +619,20 @@ def prepare_resources(incoming: Path, repo_root: Path) -> dict[str, Any]:
         "review_summary": summarize_review(entries),
         "audit": audit_repository(repo_root),
     }
+
+
+def incoming_resource_entries(incoming: Path) -> list[Path]:
+    return [
+        source
+        for source in sorted(incoming.iterdir(), key=lambda path: path.name.casefold())
+        if not should_skip_incoming_entry(source)
+    ]
+
+
+def should_skip_incoming_entry(source: Path) -> bool:
+    if source.name.startswith("."):
+        return True
+    return source.is_file() and source.name.casefold() in GENERATED_INCOMING_FILE_NAMES
 
 
 def summarize_review(entries: list[dict[str, Any]]) -> dict[str, Any]:
@@ -748,8 +769,12 @@ def row_for_headers(headers: list[str], metadata: dict[str, Any]) -> str:
     normalized = normalized_headers(headers)
     row_metadata = metadata_with_author_note(normalized, metadata)
     for header in normalized:
-        values.append(value_for_header(header, row_metadata))
+        values.append(markdown_table_cell(value_for_header(header, row_metadata)))
     return "|".join(values)
+
+
+def markdown_table_cell(value: Any) -> str:
+    return re.sub(r"\s+", " ", str(value)).replace("|", "｜").strip()
 
 
 def metadata_with_author_note(headers: list[str], metadata: dict[str, Any]) -> dict[str, Any]:
@@ -842,25 +867,66 @@ def validate_plan_entry(entry: dict[str, Any]) -> tuple[str, str, str, dict[str,
     filename = destination.get("filename")
     if not course or not category or not filename:
         raise ValueError(f"Entry is missing destination fields: {entry.get('source')}")
-    if Path(str(filename)).name != filename:
-        raise ValueError(f"Destination filename must not contain path separators: {filename}")
+    validate_path_component(str(course), "course")
+    validate_path_component(str(category), "category")
+    validate_path_component(str(filename), "destination filename")
     return str(course), str(category), str(filename), metadata
+
+
+def validate_path_component(value: str, label: str) -> None:
+    if value in {"", ".", ".."} or Path(value).name != value:
+        raise ValueError(f"{label.title()} must be a single path component: {value}")
+    if "/" in value or "\\" in value:
+        raise ValueError(f"{label.title()} must not contain path separators: {value}")
 
 
 def apply_plan(incoming: Path, repo_root: Path, plan: dict[str, Any]) -> dict[str, Any]:
     incoming = incoming.resolve()
     repo_root = repo_root.resolve()
+    actions = collect_apply_actions(incoming, repo_root, plan)
     applied = []
     skipped = []
 
     for entry in plan.get("entries", []):
         if not entry.get("apply", False):
             skipped.append({"source": entry.get("source"), "reason": "apply_false"})
+
+    for action in actions:
+        target_dir = action.target_dir
+        target_dir.mkdir(parents=True, exist_ok=True)
+        ensure_course_readme(target_dir.parent, action.course, repo_root)
+
+        if action.source.is_dir():
+            shutil.copytree(action.source, action.target)
+        else:
+            shutil.copy2(action.source, action.target)
+
+        update_category_readme(target_dir / "README.md", action.category, action.metadata, repo_root)
+        applied.append(
+            {
+                "source": str(action.source),
+                "destination": str(action.target),
+                "readme": str(target_dir / "README.md"),
+            }
+        )
+
+    return {"applied": applied, "skipped": skipped}
+
+
+def collect_apply_actions(incoming: Path, repo_root: Path, plan: dict[str, Any]) -> list[ApplyAction]:
+    actions = []
+    seen_targets: dict[Path, str] = {}
+    course_root = repo_root / COURSE_ROOT_NAME
+
+    for entry in plan.get("entries", []):
+        if not entry.get("apply", False):
             continue
 
         course, category, filename, metadata = validate_plan_entry(entry)
+        if category == "历年真题":
+            raise ValueError(f"Use canonical exam category '{CATEGORY_EXAMS}' instead of '历年真题': {entry.get('source')}")
         if (
-            category in {CATEGORY_EXAMS, "历年真题"}
+            category == CATEGORY_EXAMS
             and Path(filename).suffix.casefold() in ARCHIVE_EXTENSIONS
             and not entry.get("allow_exam_archive", False)
         ):
@@ -868,35 +934,38 @@ def apply_plan(incoming: Path, repo_root: Path, plan: dict[str, Any]) -> dict[st
                 "Exam archives must be extracted before applying, unless allow_exam_archive is true: "
                 f"{entry.get('source')}"
             )
-        source = (incoming / str(entry.get("source", ""))).resolve()
+
+        source_value = str(entry.get("source") or "")
+        if not source_value:
+            raise ValueError("Entry is missing source")
+        source = (incoming / source_value).resolve()
+        if source == incoming:
+            raise ValueError(f"Source must be a child of incoming directory: {entry.get('source')}")
         if not is_relative_to(source, incoming):
             raise ValueError(f"Source escapes incoming directory: {entry.get('source')}")
         if not source.exists():
             raise FileNotFoundError(f"Source does not exist: {source}")
 
-        course_dir = repo_root / COURSE_ROOT_NAME / course
-        target_dir = course_dir / category
-        target_dir.mkdir(parents=True, exist_ok=True)
-        ensure_course_readme(course_dir, course, repo_root)
-        target = target_dir / filename
+        target_dir = course_root / course / category
+        target = (target_dir / filename).resolve()
+        if not is_relative_to(target, course_root):
+            raise ValueError(f"Destination escapes course root: {entry.get('source')}")
         if target.exists():
             raise FileExistsError(f"Destination already exists: {target}")
+        if target in seen_targets:
+            raise FileExistsError(
+                f"Multiple plan entries target the same destination: {target} "
+                f"({seen_targets[target]} and {entry.get('source')})"
+            )
+        seen_targets[target] = str(entry.get("source"))
 
-        if source.is_dir():
-            shutil.copytree(source, target)
-        else:
-            shutil.copy2(source, target)
+        readme = target_dir / "README.md"
+        if readme.exists() and count_file_tables(readme) > 1:
+            raise ValueError(f"Multiple README file tables need manual handling: {readme}")
 
-        update_category_readme(target_dir / "README.md", category, metadata, repo_root)
-        applied.append(
-            {
-                "source": str(source),
-                "destination": str(target),
-                "readme": str(target_dir / "README.md"),
-            }
-        )
+        actions.append(ApplyAction(source, target, target_dir, course, category, metadata))
 
-    return {"applied": applied, "skipped": skipped}
+    return actions
 
 
 def is_relative_to(path: Path, parent: Path) -> bool:

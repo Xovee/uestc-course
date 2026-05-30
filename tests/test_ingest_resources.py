@@ -310,6 +310,167 @@ class IngestResourcesTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "Exam archives must be extracted"):
             ingest.apply_plan(self.incoming, self.repo, plan)
 
+    def test_apply_rejects_legacy_exam_category(self) -> None:
+        self.make_course(
+            "数据库原理及应用",
+            "历年真题",
+            "# 历年真题\n\n文件名|来源|文件类型|文件大小|备注\n---|---|---|---|---\n",
+        )
+        self.touch_file("数据库原理及应用-期末真题.pdf")
+        plan = {
+            "entries": [
+                {
+                    "source": "数据库原理及应用-期末真题.pdf",
+                    "apply": True,
+                    "destination": {
+                        "course": "数据库原理及应用",
+                        "category": "历年真题",
+                        "filename": "数据库原理及应用-期末真题.pdf",
+                    },
+                    "metadata": {
+                        "display_name": "数据库原理及应用-期末真题",
+                        "source": "Local",
+                        "file_type": "PDF",
+                        "file_size": "1 B",
+                    },
+                }
+            ]
+        }
+
+        with self.assertRaisesRegex(ValueError, "canonical exam category"):
+            ingest.apply_plan(self.incoming, self.repo, plan)
+
+    def test_apply_preflights_duplicate_targets_without_partial_copy(self) -> None:
+        category_dir = self.make_course(
+            "网络计算模式",
+            "复习资料",
+            "# 复习资料\n\n文件名|作者|来源|文件类型|文件大小|最近更新时间|备注\n---|---|---|---|---|---|---\n",
+        )
+        self.touch_file("网络计算模式-复习1.pdf")
+        self.touch_file("网络计算模式-复习2.pdf")
+        plan = {
+            "entries": [
+                {
+                    "source": "网络计算模式-复习1.pdf",
+                    "apply": True,
+                    "destination": {
+                        "course": "网络计算模式",
+                        "category": "复习资料",
+                        "filename": "网络计算模式-复习.pdf",
+                    },
+                    "metadata": {
+                        "display_name": "网络计算模式-复习",
+                        "source": "Local",
+                        "file_type": "PDF",
+                        "file_size": "1 B",
+                    },
+                },
+                {
+                    "source": "网络计算模式-复习2.pdf",
+                    "apply": True,
+                    "destination": {
+                        "course": "网络计算模式",
+                        "category": "复习资料",
+                        "filename": "网络计算模式-复习.pdf",
+                    },
+                    "metadata": {
+                        "display_name": "网络计算模式-复习",
+                        "source": "Local",
+                        "file_type": "PDF",
+                        "file_size": "1 B",
+                    },
+                },
+            ]
+        }
+
+        with self.assertRaisesRegex(FileExistsError, "same destination"):
+            ingest.apply_plan(self.incoming, self.repo, plan)
+
+        self.assertFalse((category_dir / "网络计算模式-复习.pdf").exists())
+        self.assertNotIn(
+            "网络计算模式-复习|",
+            (category_dir / "README.md").read_text(encoding="utf-8"),
+        )
+
+    def test_apply_rejects_unsafe_plan_paths(self) -> None:
+        self.make_course(
+            "网络计算模式",
+            "复习资料",
+            "# 复习资料\n\n文件名|作者|来源|文件类型|文件大小|最近更新时间|备注\n---|---|---|---|---|---|---\n",
+        )
+        self.touch_file("网络计算模式-复习.pdf")
+        unsafe_source_plan = {
+            "entries": [
+                {
+                    "source": ".",
+                    "apply": True,
+                    "destination": {
+                        "course": "网络计算模式",
+                        "category": "复习资料",
+                        "filename": "网络计算模式-复习.pdf",
+                    },
+                    "metadata": {"display_name": "网络计算模式-复习"},
+                }
+            ]
+        }
+        unsafe_destination_plan = {
+            "entries": [
+                {
+                    "source": "网络计算模式-复习.pdf",
+                    "apply": True,
+                    "destination": {
+                        "course": "网络计算模式",
+                        "category": "复习资料",
+                        "filename": "..\\逃逸.pdf",
+                    },
+                    "metadata": {"display_name": "网络计算模式-复习"},
+                }
+            ]
+        }
+
+        with self.assertRaisesRegex(ValueError, "Source must be a child"):
+            ingest.apply_plan(self.incoming, self.repo, unsafe_source_plan)
+        with self.assertRaisesRegex(ValueError, "single path component|path separators"):
+            ingest.apply_plan(self.incoming, self.repo, unsafe_destination_plan)
+
+    def test_apply_sanitizes_markdown_table_cells(self) -> None:
+        category_dir = self.make_course(
+            "网络计算模式",
+            "复习资料",
+            "# 复习资料\n\n文件名|作者|来源|文件类型|文件大小|最近更新时间|备注\n---|---|---|---|---|---|---\n",
+        )
+        self.touch_text("网络计算模式-复习.txt", "普通复习重点", datetime(2024, 5, 6, 8, 0, 0))
+        plan = {
+            "entries": [
+                {
+                    "source": "网络计算模式-复习.txt",
+                    "apply": True,
+                    "destination": {
+                        "course": "网络计算模式",
+                        "category": "复习资料",
+                        "filename": "网络计算模式-复习.txt",
+                    },
+                    "metadata": {
+                        "display_name": "网络计算模式-复习",
+                        "author": "Alice|Bob",
+                        "source": "GitHub|Issue",
+                        "file_type": "Text",
+                        "file_size": "18 B",
+                        "updated_at": "2024年5月6日",
+                        "remark": "第一行\n第二|行",
+                    },
+                }
+            ]
+        }
+
+        ingest.apply_plan(self.incoming, self.repo, plan)
+
+        content = (category_dir / "README.md").read_text(encoding="utf-8")
+        self.assertIn(
+            "网络计算模式-复习|Alice｜Bob|GitHub｜Issue|Text|18 B|2024年5月6日|第一行 第二｜行",
+            content,
+        )
+
     def test_prepare_normalizes_filename_and_screens_safe_text(self) -> None:
         self.make_course(
             "网络计算模式",
@@ -327,6 +488,19 @@ class IngestResourcesTest(unittest.TestCase):
         self.assertEqual(entry["metadata"]["display_name"], "网络计算模式-期末-复习")
         self.assertEqual(entry["content_screening"]["risk_level"], "low")
         self.assertTrue(entry["apply"])
+
+    def test_prepare_ignores_generated_plan_file(self) -> None:
+        self.make_course(
+            "网络计算模式",
+            "复习资料",
+            "# 复习资料\n\n文件名|作者|来源|文件类型|文件大小|最近更新时间|备注\n---|---|---|---|---|---|---\n",
+        )
+        self.touch_text("plan.json", '{"entries": []}')
+        self.touch_text("网络计算模式 复习.txt", "普通复习重点")
+
+        plan = ingest.prepare_resources(self.incoming, self.repo)
+
+        self.assertEqual([entry["source"] for entry in plan["entries"]], ["网络计算模式 复习.txt"])
 
     def test_prepare_blocks_privacy_risk_for_manual_review(self) -> None:
         self.make_course(
