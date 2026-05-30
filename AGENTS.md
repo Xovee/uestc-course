@@ -35,7 +35,7 @@ python tools\ingest_resources.py prepare --incoming _incoming --output _incoming
 - For issue or PR based ingestion, read the issue/PR body and comments before
   finalizing placement. Explicit guidance there, such as course, category,
   author, teacher, and incompleteness notes, is high-priority metadata.
-- For `历年试题` / `历年真题`, do not add ZIP files unless the archive only wraps
+- For `历年试题`, do not add ZIP files unless the archive only wraps
   image screenshots. Extract exam archives and place the resulting files or
   folders according to the course's existing convention; list the final
   resources in README, not the archive.
@@ -44,7 +44,8 @@ python tools\ingest_resources.py prepare --incoming _incoming --output _incoming
 
 - Existing courses go under `课程目录/<课程名>/<分类>/`.
 - Categories are usually `复习资料`, `历年试题`, and `作业`.
-- If a course already uses `历年真题`, use that instead of creating `历年试题`.
+- Use `历年试题` as the canonical exam category. If an old course still has
+  `历年真题`, migrate it to `历年试题` instead of continuing the old name.
 - For new courses, create:
   - `课程目录/<课程名>/README.md`
   - the needed category directory

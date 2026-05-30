@@ -614,13 +614,6 @@ def summarize_review(entries: list[dict[str, Any]]) -> dict[str, Any]:
 
 
 def resolve_category_alias(repo_root: Path, course: str, category: str) -> str:
-    if category != CATEGORY_EXAMS:
-        return category
-    course_dir = repo_root / COURSE_ROOT_NAME / course
-    canonical = course_dir / CATEGORY_EXAMS
-    legacy = course_dir / "历年真题"
-    if not canonical.exists() and legacy.exists():
-        return legacy.name
     return category
 
 

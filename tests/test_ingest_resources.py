@@ -156,7 +156,7 @@ class IngestResourcesTest(unittest.TestCase):
         self.assertFalse(entry["apply"])
         self.assertIn("destination_file_exists", entry["warnings"])
 
-    def test_scan_uses_existing_exam_category_alias(self) -> None:
+    def test_scan_uses_canonical_exam_category_even_if_legacy_exists(self) -> None:
         self.make_course(
             "计算机系统结构",
             "历年真题",
@@ -167,7 +167,7 @@ class IngestResourcesTest(unittest.TestCase):
         plan = ingest.scan_resources(self.incoming, self.repo)
         entry = plan["entries"][0]
 
-        self.assertEqual(entry["destination"]["category"], "历年真题")
+        self.assertEqual(entry["destination"]["category"], "历年试题")
         self.assertTrue(entry["apply"])
 
     def test_scan_requires_review_when_readme_has_multiple_file_tables(self) -> None:
