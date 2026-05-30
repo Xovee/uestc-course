@@ -941,6 +941,14 @@ def category_dirs(course_root: Path) -> list[Path]:
     return categories
 
 
+def audited_resource_category_dirs(course_root: Path) -> list[Path]:
+    return [
+        path
+        for path in category_dirs(course_root)
+        if path.name in {CATEGORY_REVIEW, CATEGORY_EXAMS, CATEGORY_ASSIGNMENTS, "历年真题"}
+    ]
+
+
 def missing_category_readmes(course_root: Path) -> list[str]:
     missing = []
     for category_dir in category_dirs(course_root):
@@ -1087,12 +1095,10 @@ def resource_children(category_dir: Path) -> list[Path]:
 def readme_row_is_online(row: dict[str, Any]) -> bool:
     file_type = row_cell(row, "文件类型").casefold()
     source = row_cell(row, "来源").casefold()
-    size = row_cell(row, "文件大小").strip()
     remark = row_cell(row, "备注")
     return (
         file_type in {"在线", "链接", "url"}
         or source in {"在线", "链接", "url"}
-        or size == "-"
         or "http://" in remark
         or "https://" in remark
     )
@@ -1102,16 +1108,32 @@ def category_readme_rows(category_dir: Path) -> list[dict[str, Any]]:
     return readme_file_rows(category_dir / "README.md")
 
 
+def readme_has_url(readme_path: Path) -> bool:
+    if not readme_path.exists():
+        return False
+    try:
+        content = read_text(readme_path)
+    except UnicodeDecodeError:
+        return False
+    return "http://" in content or "https://" in content
+
+
 def legacy_exam_category_dirs(course_root: Path) -> list[str]:
     return sorted(str(path) for path in category_dirs(course_root) if path.name == "历年真题")
 
 
 def empty_resource_directories(course_root: Path) -> list[str]:
-    return sorted(
-        str(category_dir)
-        for category_dir in category_dirs(course_root)
-        if not resource_children(category_dir)
-    )
+    empty = []
+    for category_dir in audited_resource_category_dirs(course_root):
+        if resource_children(category_dir):
+            continue
+        rows = category_readme_rows(category_dir)
+        if rows and all(readme_row_is_online(row) for row in rows):
+            continue
+        if not rows and readme_has_url(category_dir / "README.md"):
+            continue
+        empty.append(str(category_dir))
+    return sorted(empty)
 
 
 def suspicious_duplicate_extensions(course_root: Path) -> list[dict[str, Any]]:
@@ -1135,7 +1157,7 @@ def suspicious_duplicate_extensions(course_root: Path) -> list[dict[str, Any]]:
 
 def duplicate_readme_resource_names(course_root: Path) -> list[dict[str, Any]]:
     results = []
-    for category_dir in category_dirs(course_root):
+    for category_dir in audited_resource_category_dirs(course_root):
         seen: dict[str, dict[str, Any]] = {}
         for row in category_readme_rows(category_dir):
             name = str(row.get("name", "")).strip()
@@ -1159,7 +1181,7 @@ def duplicate_readme_resource_names(course_root: Path) -> list[dict[str, Any]]:
 
 def readme_resource_order_issues(course_root: Path) -> list[dict[str, Any]]:
     results = []
-    for category_dir in category_dirs(course_root):
+    for category_dir in audited_resource_category_dirs(course_root):
         readme = category_dir / "README.md"
         if not readme.exists():
             continue
@@ -1236,7 +1258,7 @@ def resource_key_is_later(current: tuple[int, int | None], previous: tuple[int, 
 
 def readme_entries_without_files(course_root: Path) -> list[dict[str, Any]]:
     results = []
-    for category_dir in category_dirs(course_root):
+    for category_dir in audited_resource_category_dirs(course_root):
         actual_keys = set()
         for child in resource_children(category_dir):
             actual_keys.update(resource_name_keys(child.name))
@@ -1257,7 +1279,7 @@ def readme_entries_without_files(course_root: Path) -> list[dict[str, Any]]:
 
 def files_missing_readme_entries(course_root: Path) -> list[dict[str, Any]]:
     results = []
-    for category_dir in category_dirs(course_root):
+    for category_dir in audited_resource_category_dirs(course_root):
         readme = category_dir / "README.md"
         if not readme.exists():
             continue

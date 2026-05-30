@@ -122,10 +122,12 @@ python tools\ingest_resources.py prepare --incoming _incoming --output _incoming
 
 `python tools\ingest_resources.py audit` should report repository consistency
 issues without modifying files. Keep coverage for README/template mismatches,
-legacy `历年真题` category directories, empty resource directories, suspicious
-duplicate file extensions such as `.pdf.pdf`, duplicate README `文件名` rows,
-README row chronological ordering, README rows without local files, and local
-files or folders missing README rows.
+legacy `历年真题` category directories, empty resource directories in standard
+resource categories, suspicious duplicate file extensions such as `.pdf.pdf`,
+duplicate README `文件名` rows, README row chronological ordering, README rows
+without local files, and local files or folders missing README rows. Do not
+treat `教材` directories as ordinary local-file resource directories unless a
+separate textbook schema is designed.
 
 ## Verification
 
