@@ -32,6 +32,8 @@ CATEGORY_REVIEW = "复习资料"
 CATEGORY_EXAMS = "历年试题"
 CATEGORY_ASSIGNMENTS = "作业"
 TERM_SORT_RANK = {"春": 1, "夏": 2, "秋": 3, "冬": 4}
+TERM_ALIASES = {"上": "春", "下": "秋"}
+TERM_TOKEN_PATTERN = "春夏秋冬上下"
 
 EXAM_KEYWORDS = ("考试", "试题", "真题", "期中", "期末", "考题", "试卷", "A卷", "B卷")
 ASSIGNMENT_KEYWORDS = ("作业", "实验", "报告", "随堂测试", "课堂测试", "练习")
@@ -1227,7 +1229,7 @@ def readme_resource_order_issues(course_root: Path) -> list[dict[str, Any]]:
 
 def resource_date_key(text: str) -> tuple[int, int | None] | None:
     academic = re.search(
-        r"((?:19|20)\d{2})\s*[-—~至]\s*((?:19|20)\d{2})\s*学年\s*第([一二12])学期",
+        r"(?<!\d)((?:19|20)\d{2})\s*[-—~至]\s*((?:19|20)\d{2})(?!\d)\s*学年\s*第([一二12])学期",
         text,
     )
     if academic:
@@ -1235,15 +1237,54 @@ def resource_date_key(text: str) -> tuple[int, int | None] | None:
         end_year = int(academic.group(2))
         semester = academic.group(3)
         if semester in {"一", "1"}:
-            return start_year, TERM_SORT_RANK["秋"]
+            return start_year, normalized_term_rank("秋")
         if semester in {"二", "2"}:
-            return end_year, TERM_SORT_RANK["春"]
-    match = re.search(r"((?:19|20)\d{2})\s*年?\s*([春夏秋冬])?", text)
-    if not match:
+            return end_year, normalized_term_rank("春")
+
+    academic_code = re.search(
+        r"(?<!\d)((?:19|20)\d{2})\s*[-—]\s*((?:19|20)\d{2})(?!\d)\s*[-—]\s*([12])",
+        text,
+    )
+    if academic_code:
+        start_year = int(academic_code.group(1))
+        end_year = int(academic_code.group(2))
+        semester = academic_code.group(3)
+        if semester == "1":
+            return start_year, normalized_term_rank("秋")
+        if semester == "2":
+            return end_year, normalized_term_rank("春")
+
+    range_match = re.search(
+        rf"(?<!\d)((?:19|20)\d{{2}})\s*年?\s*([{TERM_TOKEN_PATTERN}])?\s*[-—~至到]+\s*"
+        rf"((?:19|20)\d{{2}})(?!\d)\s*年?\s*([{TERM_TOKEN_PATTERN}])?",
+        text,
+    )
+    if range_match:
+        year = int(range_match.group(3))
+        term = range_match.group(4)
+        return year, normalized_term_rank(term)
+
+    for compact_month in re.finditer(r"(?<!\d)((?:19|20)\d{2})(?:0[1-9]|1[0-2])(?!\d)", text):
+        if not year_match_is_numeric_code_suffix(text, compact_month.start(1)):
+            return int(compact_month.group(1)), None
+
+    for match in re.finditer(rf"(?<!\d)((?:19|20)\d{{2}})(?!\d)\s*年?\s*([{TERM_TOKEN_PATTERN}])?", text):
+        if year_match_is_numeric_code_suffix(text, match.start(1)):
+            continue
+        year = int(match.group(1))
+        term = match.group(2)
+        return year, normalized_term_rank(term)
+    return None
+
+
+def year_match_is_numeric_code_suffix(text: str, start: int) -> bool:
+    return start >= 2 and text[start - 1] in {"-", "—"} and text[start - 2].isdigit()
+
+
+def normalized_term_rank(term: str | None) -> int | None:
+    if not term:
         return None
-    year = int(match.group(1))
-    term = match.group(2)
-    return year, TERM_SORT_RANK.get(term) if term else None
+    return TERM_SORT_RANK.get(TERM_ALIASES.get(term, term))
 
 
 def resource_key_is_later(current: tuple[int, int | None], previous: tuple[int, int | None]) -> bool:

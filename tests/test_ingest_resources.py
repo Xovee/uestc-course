@@ -446,6 +446,16 @@ class IngestResourcesTest(unittest.TestCase):
             mismatch_paths,
         )
 
+    def test_resource_date_key_understands_ranges_and_academic_codes(self) -> None:
+        self.assertEqual(ingest.resource_date_key("2018年秋至2021年春-期末考试"), (2021, 1))
+        self.assertEqual(ingest.resource_date_key("2000年到2009年-期末考试"), (2009, None))
+        self.assertEqual(ingest.resource_date_key("2023-2024-2-第四章-补充作业"), (2024, 1))
+        self.assertEqual(ingest.resource_date_key("2024上-第五次测试"), (2024, 1))
+        self.assertEqual(ingest.resource_date_key("202501-随机过程-期末自救指南"), (2025, None))
+        self.assertEqual(ingest.resource_date_key("2007-2008学年第一学期"), (2007, 3))
+        self.assertEqual(ingest.resource_date_key("2007-2008学年第二学期"), (2008, 1))
+        self.assertIsNone(ingest.resource_date_key("ISO_IEC_IEEE.42010-2011"))
+
     def test_audit_reports_readme_file_inventory_issues(self) -> None:
         category_dir = self.make_course(
             "矩阵理论",

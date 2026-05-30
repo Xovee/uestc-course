@@ -3,18 +3,18 @@
 文件名|作者|来源|文件类型|文件大小|最近更新时间|备注
 ---|---|---|---|---|---|---
 2023新中特资料：二十大报告、十九届六中全会、党的百年奋斗总结|Unknown||PDF|1.4 MB|2023年3月6日|来自[河畔](https://bbs.uestc.edu.cn/forum.php?mod=viewthread&tid=2014367&extra=page%3D1&page=1)
-10明确+14坚持+13方面成就|Unknown||PDF|203 KB|2023年3月6日|来自[河畔](https://bbs.uestc.edu.cn/forum.php?mod=viewthread&tid=2015100&extra=page%3D1)
-20大报告+19届6、7中全会报告|Unknown||PDF|706 KB|2023年3月6日|
-2020秋中特考试说明与资料|Unknown||Zip|69 KB|2021年1月25日|
-习近平近期重要讲话精神|Unknown||PDF|207.3 KB|2021年1月6日|
-肖四中特+当代部分整理|Unknown||PDF|1.7 MB|2021年1月6日|
-知博目录检索|Unknown||PDF|331.7 KB|2021年1月6日|
 2021考研政治肖X荣最后五道题|肖秀荣||PDF|1.2 MB|2020年12月23日|
 2021点题课讲义（时政重点）|Unknown||PDF|965.4 KB|2020年12月19日|
-【毛中特】爷四精简版大题答案打印版（空卡）|Unknown||PDF|10.8 MB|2020年12月19日|
-口诀背肖四（毛中特部分）|Unknown||PDF|348.4 KB|2020年12月10日|
-肖4分析题背诵版|Unknown||PDF|2.0 MB|2020年12月7日|
 2021考研政治肖8分析题背诵笔记|Unknown||PDF|577.5 KB|2020年11月19日|
+2020秋中特考试说明与资料|Unknown||Zip|69 KB|2021年1月25日|
 中特（2018）知识点-Word版|Unknown||Word|32.1 KB|2018年|
 中特（2018）知识点-PDF版|Unknown||PDF|658.9 KB|2018年|
 中特（2018）知识点L3|Unknown||PDF|322.8 KB|2018年|
+10明确+14坚持+13方面成就|Unknown||PDF|203 KB|2023年3月6日|来自[河畔](https://bbs.uestc.edu.cn/forum.php?mod=viewthread&tid=2015100&extra=page%3D1)
+20大报告+19届6、7中全会报告|Unknown||PDF|706 KB|2023年3月6日|
+习近平近期重要讲话精神|Unknown||PDF|207.3 KB|2021年1月6日|
+肖四中特+当代部分整理|Unknown||PDF|1.7 MB|2021年1月6日|
+知博目录检索|Unknown||PDF|331.7 KB|2021年1月6日|
+【毛中特】爷四精简版大题答案打印版（空卡）|Unknown||PDF|10.8 MB|2020年12月19日|
+口诀背肖四（毛中特部分）|Unknown||PDF|348.4 KB|2020年12月10日|
+肖4分析题背诵版|Unknown||PDF|2.0 MB|2020年12月7日|
