@@ -118,6 +118,8 @@ python tools\ingest_resources.py prepare --incoming _incoming --output _incoming
 - If exam metadata such as `闭卷`, `A卷`, `回忆版`, or `非官方答案` has no matching
   template column, encode the essential answer status in the filename and put
   the rest in `备注`.
+- When a source URL is recorded in `备注`, prefer concise Markdown links with
+  the source name, for example `来自[河畔](https://...)`, instead of bare URLs.
 - README table cell values should be single-line Markdown-table-safe text.
   Replace embedded newlines with spaces and avoid raw `|` characters inside
   cells.
