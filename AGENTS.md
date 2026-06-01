@@ -104,6 +104,10 @@ python tools\ingest_resources.py prepare --incoming _incoming --output _incoming
   template's columns when creating or repairing course/category README files;
   do not add new columns such as `科目`, `考试形式`, or `答案` unless that target
   README already uses them.
+- Do not update the root `README.md` course/resource count after ordinary
+  resource additions. Only update that project-level statistic when the user
+  explicitly asks, and prefer approximate phrasing such as `150余门课程，1800多个资源`
+  / `150+ courses with 1800+ materials` instead of exact numbers.
 - Match the template's header and separator text exactly, including spacing such
   as `文件名|来源 | 文件类型|文件大小|备注` for `历年试题`.
 - Category templates contain example rows. Use their title/header/separator as
