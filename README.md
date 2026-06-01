@@ -1,7 +1,7 @@
 <p align='center'><img src='./assets/img/repo-banner.png#gh-light-mode-only' width=70%></p>
 <p align='center'><img src='./assets/img/repo-banner-dark.png#gh-dark-mode-only' width=70%></p>
 
-本仓库的内容包括电子科技大学的各类课程复习资料。本仓库为非营利、永久免费的开源项目，仓库之目的即推动**知识传播**、**提高资源质量**、**减少获取成本**、**提倡无纸化资料**、**促进教育公平**，让我电学子在备考、复习之时不必再苦寻资料。仓库内容之充实全凭网友贡献，望各位读者在有所获的同时，能积极上传资源、完善资源，使仓库可良性发展。如诸君对仓库有任何改进意见，还请不吝赐教。目前已收录150余门课程，1800多个资源。
+本仓库的内容包括电子科技大学的各类课程复习资料。本仓库为非营利、永久免费的开源项目，仓库之目的即推动**知识传播**、**提高资源质量**、**减少获取成本**、**提倡无纸化资料**、**促进教育公平**，让我电学子在备考、复习之时不必再苦寻资料。仓库内容之充实全凭网友贡献，望各位读者在有所获的同时，能积极上传资源、完善资源，使仓库可良性发展。如诸君对仓库有任何改进意见，还请不吝赐教。目前已收录156门课程，1877个资源。
 
 ![GitHub repo size](https://img.shields.io/github/repo-size/Xovee/uestc-course.svg)
 [![Issues](https://img.shields.io/github/issues/Xovee/uestc-course.svg)]()
@@ -10,7 +10,7 @@
 <details>
   <summary>English Introduction</summary>
     <p>
-      This repo provides many course review materials of the University of Electronic Science and Technology of China (UESTC), Chengdu, China. This repo is a non-profit free open-access project. The purpose of this repo is advocating the <b>sharing of knowledge</b>, <b>material quality improving</b>, <b>acquisition cost reduction</b>, <b>promoting paperless materials</b>, and <b>facilitating the educational equity</b>. This repo expects to help UESTC students for finding course materials in ease. A wealthy repo depends on the contributions of users. We hope the repo users could sharing their materials in hand to the repo, helping other users to gain more materials. If you have any suggestions for repo improvements, please let us know. The repo now contains 150+ courses with 1800+ materials. 
+      This repo provides many course review materials of the University of Electronic Science and Technology of China (UESTC), Chengdu, China. This repo is a non-profit free open-access project. The purpose of this repo is advocating the <b>sharing of knowledge</b>, <b>material quality improving</b>, <b>acquisition cost reduction</b>, <b>promoting paperless materials</b>, and <b>facilitating the educational equity</b>. This repo expects to help UESTC students for finding course materials in ease. A wealthy repo depends on the contributions of users. We hope the repo users could sharing their materials in hand to the repo, helping other users to gain more materials. If you have any suggestions for repo improvements, please let us know. The repo now contains 156 courses with 1877 materials.
     </p>
 </details>
 
@@ -49,4 +49,3 @@
 <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="知识共享许可协议" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />本仓库的资源默认采用<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a>进行许可，有特别说明的除外。这意味着您可以对本仓库中所包含的资源进行复制、发行、修改和创作等，但不得用于商业性目的，在使用时须进行署名，且以相同或兼容的协议进行许可。仓库的资源来自于用户和互联网，其正确性不做保证。
 
 <p align='center' style='margin-top: 1em;'><img src='./assets/img/university-motto.png' width=85%></p>
-
