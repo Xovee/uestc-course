@@ -86,6 +86,9 @@ python tools\ingest_resources.py prepare --incoming _incoming --output _incoming
 - If the placement is clear, the content screening is low-risk, metadata can be
   verified from file content or issue/PR guidance, README format matches the
   template, and verification passes, commit and push directly to GitHub.
+- After successfully adding and pushing resources from a GitHub issue, reply to
+  the issue with a short thank-you such as `感谢贡献，资源已添加到仓库！`, then
+  close the issue when GitHub write access is available.
 - If there is meaningful uncertainty, stop before `git add`, `git commit`, and
   `git push`; summarize the concern and wait for the user to review and approve.
 - Human review is required for unclear course ownership, privacy or copyright
