@@ -2,6 +2,8 @@
 
 来源标题：[研究生课程考试] 游飞CMOS射频集成电路期末考试2026回忆版
 
+来源链接：https://bbs.uestc.edu.cn/forum.php?mod=viewthread&tid=2461946&extra=page%3D1
+
 1. 给定 MOSFET、FinFET，圈出沟道位置，并说明 FinFET 为什么好。
 2. 给定两组电感，画出寄生电容。
 3. 接收机名字及原理。
