@@ -6,6 +6,9 @@ organize newly provided materials, follow this durable workflow.
 ## Local Resource Ingestion
 
 - The user places new materials in `_incoming/`.
+- Explicitly read text files, README files, generated plans, issue/PR exports,
+  and metadata as UTF-8 whenever the tool supports an encoding option. Set the
+  console/output encoding to UTF-8 before inspecting Chinese content.
 - Start with:
 
 ```powershell
