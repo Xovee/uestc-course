@@ -86,9 +86,14 @@ python tools\ingest_resources.py prepare --incoming _incoming --output _incoming
 
 - After organizing materials, decide whether the result is low-risk enough to
   finish end-to-end or should wait for human review.
+- For ordinary resource ingestion, stop after organizing resources and running
+  verification, then ask the user to inspect the final changes before `git add`,
+  `git commit`, or `git push`. Only commit and push after the user explicitly
+  approves that batch.
 - If the placement is clear, the content screening is low-risk, metadata can be
   verified from file content or issue/PR guidance, README format matches the
-  template, and verification passes, commit and push directly to GitHub.
+  template, and verification passes, present the verified diff summary to the
+  user for review instead of committing directly.
 - After successfully adding and pushing resources from a GitHub issue, reply to
   the issue with a short thank-you such as `感谢贡献，资源已添加到仓库！`, then
   close the issue when GitHub write access is available.
@@ -99,7 +104,8 @@ python tools\ingest_resources.py prepare --incoming _incoming --output _incoming
   archives or binary resources, new-course structure uncertainty, or exam
   metadata that cannot be reliably inferred.
 - Never open a PR unless the user explicitly asks. The normal maintainer flow is
-  direct push to `origin/main` after a low-risk local verification pass.
+  direct push to `origin/main` only after the user has inspected and approved
+  the final local changes for that batch.
 
 ## README Updates
 
