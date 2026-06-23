@@ -1,0 +1,55 @@
+name: Repository Quality Checks
+
+on:
+  pull_request:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    env:
+      PYTHONUTF8: "1"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Run tests
+        run: python -m unittest discover -s tests
+
+      - name: Compile automation scripts
+        run: >-
+          python -m py_compile
+          tools/ingest_resources.py
+          tools/repository_size_report.py
+          tests/test_ingest_resources.py
+          tests/test_repository_size_report.py
+
+      - name: Audit repository consistency
+        run: python tools/ingest_resources.py audit
+
+      - name: Smoke test size report
+        run: python tools/repository_size_report.py --limit 5 --threshold-mb 50 --json
+
+      - name: Check whitespace in changed files
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            git diff --check "origin/${{ github.base_ref }}...HEAD"
+          elif [[ -n "${{ github.event.before }}" && "${{ github.event.before }}" != "0000000000000000000000000000000000000000" ]]; then
+            git diff --check "${{ github.event.before }}" HEAD
+          else
+            git diff --check HEAD~1 HEAD
+          fi

@@ -168,8 +168,8 @@ separate textbook schema is designed.
 Run these after changing the automation code or tests:
 
 ```powershell
-python -m unittest tests.test_ingest_resources
-python -m py_compile tools\ingest_resources.py tests\test_ingest_resources.py
+python -m unittest discover -s tests
+python -m py_compile tools\ingest_resources.py tools\repository_size_report.py tests\test_ingest_resources.py tests\test_repository_size_report.py
 python tools\ingest_resources.py audit
 git diff --check
 ```
