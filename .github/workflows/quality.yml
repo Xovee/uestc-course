@@ -31,8 +31,10 @@ jobs:
       - name: Compile automation scripts
         run: >-
           python -m py_compile
+          tools/build_static_site.py
           tools/ingest_resources.py
           tools/repository_size_report.py
+          tests/test_build_static_site.py
           tests/test_ingest_resources.py
           tests/test_repository_size_report.py
 
@@ -41,6 +43,9 @@ jobs:
 
       - name: Smoke test size report
         run: python tools/repository_size_report.py --limit 5 --threshold-mb 50 --json
+
+      - name: Smoke test static site index
+        run: python tools/build_static_site.py --output /tmp/uestc-course-resources.json
 
       - name: Check whitespace in changed files
         shell: bash

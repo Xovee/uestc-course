@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>电子科技大学课程资料共享平台 | UESTC Course Resources</title>
+    <meta name="description" content="电子科技大学课程资料共享平台提供可检索的 UESTC 课程复习资料、历年试题、作业和教材索引，帮助学生快速查找课程资源。">
+    <meta name="keywords" content="电子科技大学, UESTC, 课程资料, 历年试题, 复习资料, 作业, 教材">
+    <meta name="robots" content="index,follow">
+    <link rel="canonical" href="https://xovee.github.io/uestc-course/">
+    <meta property="og:title" content="电子科技大学课程资料共享平台">
+    <meta property="og:description" content="可检索的电子科技大学课程资料索引，覆盖复习资料、历年试题、作业和教材。">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://xovee.github.io/uestc-course/">
+    <meta property="og:site_name" content="电子科技大学课程资料共享平台">
+    <meta name="twitter:card" content="summary">
+    <link rel="stylesheet" href="styles.css?v=20260624-search-spacing">
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "电子科技大学课程资料共享平台",
+        "alternateName": "UESTC Course Resources",
+        "url": "https://xovee.github.io/uestc-course/",
+        "inLanguage": "zh-CN",
+        "description": "可检索的电子科技大学课程资料索引，覆盖复习资料、历年试题、作业和教材。",
+        "creator": {
+          "@type": "Person",
+          "name": "Xovee Xu",
+          "url": "https://www.xoveexu.com/"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="topbar-inner">
+        <a class="brand" href="https://github.com/Xovee/uestc-course" target="_blank" rel="noreferrer" aria-label="电子科技大学课程资料共享平台">
+          <span class="brand-school">电子科技大学</span>
+          <span class="brand-site">课程资料共享平台</span>
+        </a>
+        <nav class="topnav" aria-label="主要入口">
+          <a href="https://github.com/Xovee/uestc-course/blob/main/README.md" target="_blank" rel="noreferrer">仓库说明</a>
+          <a href="https://github.com/Xovee/uestc-course/blob/main/assets/%E8%B4%A1%E7%8C%AE%E6%8C%87%E5%8D%97.md" target="_blank" rel="noreferrer">贡献资源</a>
+          <a href="https://github.com/Xovee/uestc-course" target="_blank" rel="noreferrer">GitHub</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <p class="eyebrow">UESTC Course Resources</p>
+          <h1 id="hero-title">
+            <span>电子科技大学</span>
+            <span>课程资料共享平台</span>
+          </h1>
+          <p class="hero-lede">一个面向课程复习、历年试题和作业资料的可检索目录。</p>
+        </div>
+        <div class="index-status" aria-label="索引统计">
+          <div>
+            <span>课程</span>
+            <strong id="course-count">0</strong>
+            <small>门</small>
+          </div>
+          <div>
+            <span>资源</span>
+            <strong id="resource-count">0</strong>
+            <small>条</small>
+          </div>
+          <div>
+            <span>当前结果</span>
+            <strong id="visible-count">0</strong>
+            <small>条</small>
+          </div>
+        </div>
+      </section>
+
+      <section class="search-section" aria-label="资源搜索">
+        <div class="section-head">
+          <h2>目录检索</h2>
+          <span id="result-summary"></span>
+        </div>
+        <div class="searchbar" role="search">
+          <label for="search-input">搜索</label>
+          <input id="search-input" type="search" placeholder="例如：图论 期末 2025 深度学习" autocomplete="off">
+          <label for="category-filter">分类</label>
+          <select id="category-filter">
+            <option value="">全部分类</option>
+          </select>
+          <label for="sort-select">排序</label>
+          <select id="sort-select">
+            <option value="course">课程名</option>
+            <option value="resource">资源数量</option>
+            <option value="match">匹配度</option>
+          </select>
+        </div>
+      </section>
+
+      <section class="layout" aria-label="资源浏览">
+        <aside class="course-panel">
+          <div class="panel-head">
+            <h2>课程索引</h2>
+            <button id="clear-button" type="button">清除筛选</button>
+          </div>
+          <div id="course-list" class="course-list"></div>
+        </aside>
+
+        <section class="resource-panel">
+          <div class="panel-head">
+            <h2>资源条目</h2>
+          </div>
+          <div id="resource-list" class="resource-list"></div>
+          <button id="more-button" class="more-button" type="button">显示更多</button>
+        </section>
+      </section>
+    </main>
+
+    <script src="app.js?v=20260624-search-spacing"></script>
+  </body>
+</html>

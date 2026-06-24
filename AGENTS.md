@@ -169,7 +169,7 @@ Run these after changing the automation code or tests:
 
 ```powershell
 python -m unittest discover -s tests
-python -m py_compile tools\ingest_resources.py tools\repository_size_report.py tests\test_ingest_resources.py tests\test_repository_size_report.py
+python -m py_compile tools\build_static_site.py tools\ingest_resources.py tools\repository_size_report.py tests\test_build_static_site.py tests\test_ingest_resources.py tests\test_repository_size_report.py
 python tools\ingest_resources.py audit
 git diff --check
 ```
