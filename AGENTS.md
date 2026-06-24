@@ -30,6 +30,8 @@ python tools\ingest_resources.py prepare --incoming _incoming --output _incoming
 
 - Treat privacy, prohibited content, copyright risk, and subjective course or
   teacher evaluations as human-review gates.
+- 发现可能违反仓库政策的资源时，说明风险并等待 Xovee Xu 确认；
+  经确认后，可以不收录该资源。
 - If `content_screening.risk_level` is `high`, `medium`, or `unknown`, explain
   the finding and ask for confirmation before setting `apply` to `true`.
 - Images, old `.doc` / `.ppt`, archives, audio, and video may not be fully
