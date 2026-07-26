@@ -8,6 +8,9 @@
 编译原理语义子程序真题汇总|Unknown||Word|2.07 MB|2025年12月3日|计算机学院
 编译原理习题参考-含答案|Unknown||Slides|563 KB|2025年5月11日|计算机学院
 编译原理习题参考-无答案|Unknown||Slides|155 KB|2025年5月11日|计算机学院
+编译原理-算法复习|Unknown|GitHub Issue|PDF|136 KB|2025年2月8日|信软学院；算法考点与复习链接汇总
+编译原理-复习综合|Unknown|GitHub Issue|Word|13.28 MB|2025年2月8日|信软学院；综合复习资料，含课程幻灯片截图
+编译原理-练习题-无答案|Unknown|GitHub Issue|Word|16 KB|2025年2月8日|信软学院；5 道练习题，无答案
 编译原理复习-敲代码的小提琴手|敲代码的小提琴手（语雀、CSDN、github同名）||Online Doc|-|2022年6月9日|语雀文档
 编译复习提纲屈鸿|Unknown||Word|16 KB|2019年6月10日|
 复习提纲|Unknown||PDF|705 MB|2019年6月10日|
