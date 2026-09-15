@@ -18,24 +18,24 @@ python tools\ingest_resources.py prepare --incoming _incoming --output _incoming
 - Review `_incoming/plan.json` before applying anything.
 - The prepare/scan flow ignores generated `_incoming/plan.json` files; do not
   treat them as resources to ingest.
-- Do not delete files from `_incoming/`; the ingestion flow preserves source
-  files by default.
-- Keep only active, not-yet-reviewed batches in `_incoming/`. After a batch is
-  organized and either committed or explicitly approved for cleanup, delete its
-  original source files from `_incoming/` instead of archiving them. If
-  `_incoming/` contains old batches, run the prepare command against the current
-  batch subfolder to avoid mixing unrelated resources into one plan.
+- 准备、审查和应用计划期间保留 `_incoming/` 原始文件。某批次整理完成，
+  且其资源及 README 已提交，或用户明确批准清理该批次后，清理该批次
+  已处理的原始来源文件，不另行归档。清理前核对文件清单及目标路径；
+  保留待审、未处理和其他批次文件。
+- 存在多个批次时，仅对当前批次子目录运行 prepare，避免混入旧批次。
 
 ## Review Rules
 
 - Treat privacy, prohibited content, copyright risk, and subjective course or
   teacher evaluations as human-review gates.
-- 发现可能违反仓库政策的资源时，说明风险并等待 Xovee Xu 确认；
-  经确认后，可以不收录该资源。
-- If `content_screening.risk_level` is `high`, `medium`, or `unknown`, explain
-  the finding and ask for confirmation before setting `apply` to `true`.
-- Images, old `.doc` / `.ppt`, archives, audio, and video may not be fully
-  text-scannable; keep them in manual review unless the user confirms.
+- 对可能违反仓库政策的资源、`content_screening.risk_level` 为 `high`、
+  `medium` 或 `unknown` 的资源，以及尚未充分检查的图片、旧版 `.doc` /
+  `.ppt`、压缩包、音视频，保持 `apply: false`。先完成允许的只读检查，
+  列出具体风险、候选归属和需要用户决定的事项；用户确认前不收录这些资源。
+  经 Xovee Xu 确认后，可以不收录相关资源。
+- 待审项不阻止其他独立且已授权资源的整理与验证。计划应用仍须对全部
+  `apply: true` 条目先统一预检，验证失败时不得部分写入。最终摘要分别
+  列出已整理项和待审项。
 - Use file modification time (`mtime`) for README update dates, not today's date.
 - README `文件名` cells should normally omit file extensions; actual files keep
   their extensions.
@@ -60,13 +60,17 @@ python tools\ingest_resources.py prepare --incoming _incoming --output _incoming
 - Use conservative filename normalization: clean spaces, illegal characters, and
   repeated separators; preserve original meaning. Do not invent year, semester,
   answer status, teacher, author, or source.
-- Prefer filenames that start with the course name, matching the examples in
-  `课程目录/0-模板`, unless the target course already uses a different local
-  convention for that category.
-- When actively reorganizing a course/category, update older resources in that
-  same target category to the current naming and README conventions too. Do not
-  leave mixed old/new styles in one README just because some entries predate the
-  current ingestion task.
+- 非试题资源默认以课程名开头，目标分类已有明确命名惯例时沿用。试题
+  优先采用下文的 `年份学期-考试类型-答案状态-补充信息.ext` 规则；目标
+  试题分类已有一致的课程名前缀时可保留。模板示例用于说明格式，不覆盖
+  本节的试题专用规则。
+- 普通新增资源只修改新增文件、对应 README 条目及必要链接，不自动统一
+  旧资源命名或重排历史条目。已有表格按倒序排列时，将新增条目插入相应
+  位置；否则保留旧条目的相对顺序。
+- 用户明确要求整理某课程或分类时，在该范围内统一新旧资源的命名、README
+  格式和日期顺序，并修复受影响链接；保留原有事实信息，不扩展到其他分类
+  或独立历史表格。有可核实日期的条目倒序排列，未注明日期的条目置后，
+  除非目标表格已有更明确的局部约定。
 - For exam materials, inspect the file content whenever possible before
   finalizing filename and README metadata. Derive year/semester, exam type,
   exam form, and answer status from the paper itself; use the original filename
@@ -86,21 +90,15 @@ python tools\ingest_resources.py prepare --incoming _incoming --output _incoming
 
 ## Commit and Push Policy
 
-- After organizing materials, decide whether the result is low-risk enough to
-  finish end-to-end or should wait for human review.
-- For ordinary resource ingestion, stop after organizing resources and running
-  verification, then ask the user to inspect the final changes before `git add`,
-  `git commit`, or `git push`. Only commit and push after the user explicitly
-  approves that batch.
-- If the placement is clear, the content screening is low-risk, metadata can be
-  verified from file content or issue/PR guidance, README format matches the
-  template, and verification passes, present the verified diff summary to the
-  user for review instead of committing directly.
+- 普通资源入库在首次请求审核前，应完成本批次已授权的整理、README 更新、
+  适用验证，以及本次改动引入问题的修复，形成可直接检查的最终差异。
+- 无论风险是否较低，均须在 `git add`、`git commit`、`git push` 前展示
+  差异摘要，并等待用户检查、明确批准该批次。用户批准后，继续完成批准
+  范围内的提交和推送，不重复索要同一授权；若最终差异或风险发生实质变化，
+  说明变化并重新确认受影响部分。
 - After successfully adding and pushing resources from a GitHub issue, reply to
   the issue with a short thank-you such as `感谢贡献，资源已添加到仓库！`, then
   close the issue when GitHub write access is available.
-- If there is meaningful uncertainty, stop before `git add`, `git commit`, and
-  `git push`; summarize the concern and wait for the user to review and approve.
 - Human review is required for unclear course ownership, privacy or copyright
   concerns, sensitive/prohibited content, conflicting metadata, unreadable
   archives or binary resources, new-course structure uncertainty, or exam
@@ -126,10 +124,7 @@ python tools\ingest_resources.py prepare --incoming _incoming --output _incoming
 - Use existing source vocabulary where possible, for example `GitHub Issue`,
   `PR`, `河畔`, or `Local`; do not invent source labels such as `Issue #153`.
 - Read the target README's actual table header and fill columns dynamically.
-- Sort README resource rows in reverse chronological order when the filename or
-  verified metadata contains a year/term/date. Keep undated rows after dated
-  rows unless the target README already has a stronger local convention.
-- Do not reformat, reorder, or clean up existing historical tables.
+- README 条目排序和历史内容整理范围遵循上文 Placement and Naming 的规定。
 - If a README has multiple `文件名` tables, do not auto-insert; ask the user.
 - If the user names an author but the target README has no `作者` column, record
   it in `备注`; if there is no `备注` column, add one conservatively.
@@ -167,7 +162,13 @@ separate textbook schema is designed.
 
 ## Verification
 
-Run these after changing the automation code or tests:
+仅新增或整理资源时，核对本批次计划、目标文件或目录、README 条目、命名、
+元数据和受影响链接，并运行 `git diff --check`；使用只读 audit 检查一致性，
+区分本次引入的问题与既有问题，不自动修复范围外历史问题。
+
+修改自动化代码或测试时，运行下列四项检查。修复本次改动引入的失败后，
+重跑受影响检查；通过后没有新改动或新证据，不重复运行。无法完成的检查
+应明确报告，不将未验证结果称为通过。
 
 ```powershell
 python -m unittest discover -s tests
