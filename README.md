@@ -28,6 +28,10 @@
 
 [**使用指南**](./assets/使用指南.md) 中介绍了多种仓库使用方法，包括：浏览器搜索、文件查找、资源下载、仓库 Clone、提交 Issue 等。
 
+## 学位论文模板
+
+准备撰写学位论文的同学，可以使用 [电子科技大学 LaTeX 学位论文模板（UESTC Thesis）](https://github.com/Xovee/uestc-thesis)。模板面向硕士、博士研究生，支持中英文写作，可在 Overleaf 或本地使用 XeLaTeX 编译，并提供示例论文与[使用指南](https://github.com/Xovee/uestc-thesis/blob/main/GUIDE.md)。
+
 ## 贡献方法
 
 [**贡献指南**](./assets/贡献指南.md) 中介绍了各种为仓库做出贡献的方法，包括：新增资源、完善资源、提出改进意见和加入项目组等。
