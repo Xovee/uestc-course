@@ -1,20 +1,19 @@
 ---
 name: Feature request
-about: 如果您对仓库有任何功能上的建议，请在此处提交功能建议，谢谢。
-title: "[功能建议] "
+about: Suggest improvements to repository organization, use or maintenance.
+title: "[Feature request] "
 labels: enhancement
 assignees: ''
-
 ---
 
-**如果您的建议是由于仓库的缺陷**
-请在这里清晰、简明地描述仓库的缺陷。
+**Problem to solve**:
 
-**功能建议**
-请在这里清晰、简明地描述您对仓库的功能建议。
+**Suggested improvement**:
 
-**替代方案**
-如果您有考虑过任何替代方案的话，请在这里描述。
+**Affected directory, page or use case, if applicable**:
 
-**其他问题**
-请在这里描述其他问题，例如截图等
+**Alternatives considered, optional**:
+
+**Additional context, optional**:
+
+Do not disclose private information in examples or screenshots.

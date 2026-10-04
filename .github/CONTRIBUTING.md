@@ -1,33 +1,10 @@
 # 贡献指南
 
-感谢你愿意帮助完善 `uestc-course`。如果你只是想上传资源，最简单的方式是提交
-“资源贡献” Issue，把文件拖拽到输入框即可。
+感谢帮助完善 UESTC Course。上传资料可使用“资源贡献” Issue；熟悉 GitHub 的贡献者也可提交 Pull Request。
 
-详细说明请参考仓库内的 [贡献指南](../assets/贡献指南.md)。
+- 提交途径、所需信息与注意事项：[贡献指南](../assets/贡献指南.md)。
+- 公开收录标准：[仓库协议](../assets/仓库协议.md)；社区参与遵守[行为准则](CODE_OF_CONDUCT.md)。
+- 整理资源或修改代码：[维护指南](../assets/维护指南.md)及其中的验证章节。
+- 使用助手维护时：[AGENTS.md](../AGENTS.md)规定人工审查、提交批准和对外操作边界。
 
-## 资源贡献
-
-提交资源时，如果你知道下面的信息，可以顺手写上；不知道可以留空，维护者会协助整理。
-
-- 课程名称
-- 资源类型：复习资料、历年试题、作业、教材或其他
-- 资源说明：例如复习提纲、期末试题、实验报告模板等
-- 年份、学期、考试类型、是否含答案
-- 来源、作者或原始链接
-- 需要特别说明的版权、隐私或转载限制
-
-请尽量避免上传包含个人隐私、主观课程/教师评价、明显版权风险或不适合公开传播的内容。
-
-## Pull Request
-
-如果你通过 Pull Request 贡献资源，请尽量保持现有目录结构和 README 表格风格。
-维护脚本会检查资源目录、README 表格和下载链接的一致性。
-
-维护者在合并前通常会运行：
-
-```powershell
-python -m unittest tests.test_ingest_resources
-python -m py_compile tools\ingest_resources.py tests\test_ingest_resources.py
-python tools\ingest_resources.py audit
-git diff --check
-```
+Issue 模板只收集资料，不代表资源已获准收录。不要在公开 Issue 中粘贴隐私内容或权利证明原件；权益问题请按[侵权处理](../assets/侵权处理.md)联系维护者。

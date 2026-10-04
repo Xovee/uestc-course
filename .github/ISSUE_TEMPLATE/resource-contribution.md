@@ -1,28 +1,27 @@
 ---
 name: Resource contribution
-about: 如果您有资源打算对仓库进行贡献，请在此处提交资源，谢谢。
-title: "[资源贡献] "
+about: Submit course or entrance-exam materials for maintainer review.
+title: "[Resource contribution] "
 labels: resource contribution
 assignees: ''
-
 ---
 
-感谢贡献！点击紧贴本输入框下方的文字即可上传文件，也可以直接拖拽文件到输入框。如果有多个文件，可以压缩为 ZIP 后上传。
+Thank you for contributing. Please read the [contribution guide](https://github.com/Xovee/uestc-course/blob/main/assets/贡献指南.md). Attach files here; ZIP is accepted for transferring multiple files. Maintainers will review their final placement.
 
-如果方便，请补充下面的信息；不知道的项目可以留空，维护者会协助整理。
+Provide information you know and leave unknown fields blank.
 
-**课程名称**：
+**Course or entrance-exam subject**:
 
-**资源类型**：复习资料 / 历年试题 / 作业 / 教材 / 其他
+**Resource type**: Review materials / Past exams / Assignments / Textbook information / Other
 
-**资源说明**：
+**Description**:
 
-**年份、学期、考试类型、是否含答案**：
+**Year, semester, exam type, answer availability and answer source**:
 
-**来源、作者或原始链接**：
+**Source, author, instructor or original URL**:
 
-**其他备注**：
+**Recalled questions, missing pages or other limitations**:
 
-请尽量避免上传包含个人隐私、主观课程/教师评价、明显版权风险或不适合公开传播的内容。
+**Permission to share publicly or usage restrictions**:
 
-再次感谢。
+Do not post private information, subjective course or instructor evaluations, unauthorized copies, or other unsuitable content in a public issue. For rights concerns or private supporting evidence, contact the maintainer through the [rights-reporting process](https://github.com/Xovee/uestc-course/blob/main/assets/侵权处理.md).

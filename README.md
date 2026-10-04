@@ -34,7 +34,7 @@
 
 ## 贡献方法
 
-[**贡献指南**](./assets/贡献指南.md) 中介绍了各种为仓库做出贡献的方法，包括：新增资源、完善资源、提出改进意见和加入项目组等。
+[**贡献指南**](./assets/贡献指南.md) 介绍了通过 Issue、邮件或 Pull Request 新增资源、完善资料和报告问题的方法。维护者与助手从[规则入口](./AGENTS.md)和[维护指南](./assets/维护指南.md)开始。
 
 ## 其它
 
@@ -50,6 +50,8 @@
 
 如果您有任何问题，请通过电子邮件 xovee at uestc.edu.cn 或者 xovee.xu at gmail.com 或者 xovee at live.com 与我（[Xovee Xu](https://www.xoveexu.com/)）联系。
 
-<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="知识共享许可协议" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />本仓库的资源默认采用<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">知识共享署名-非商业性使用-相同方式共享 4.0 国际许可协议</a>进行许可，有特别说明的除外。这意味着您可以对本仓库中所包含的资源进行复制、发行、修改和创作等，但不得用于商业性目的，在使用时须进行署名，且以相同或兼容的协议进行许可。仓库的资源来自于用户和互联网，其正确性不做保证。
+<a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="知识共享许可协议" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a>
+
+仓库默认许可为 CC BY-NC-SA 4.0；适用范围及第三方资源的特别条件见[版权声明](./assets/版权声明.md)，资料可靠性与使用限制见[免责声明](./assets/免责声明.md)。
 
 <p align='center' style='margin-top: 1em;'><img src='./assets/img/university-motto.png' width=85%></p>

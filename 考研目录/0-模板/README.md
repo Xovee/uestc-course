@@ -1,8 +1,5 @@
-# 模板
+# 考研科目 README 模板入口
 
-课程介绍。
+使用[课程 README 模板](../../课程目录/0-模板/README.md)，将标题和介绍改为实际科目，下载链接中的路径改为 `考研目录/<科目名>`。
 
-## 下载
-
-[点击链接，下载文件夹内所有内容](https://xovee.github.io/gitzip/?https://github.com/Xovee/uestc-course/tree/main/课程目录/【替换为文件夹名】)
-<br><h1>资源贡献</h1><br>希望大家能多多贡献资源，促进仓库良性发展，帮助更多的同学考个好成绩！仓库地址：[https://github.com/Xovee/uestc-course](https://github.com/Xovee/uestc-course)<br><br>国内访问GitHub不太稳定，有时候需要特殊手段。有问题可以邮件联系我：`xovee at uestc.edu.cn` 
+分类表格沿用[统一模板索引](../../assets/模板/README.md)，本目录不维护第二套表格。操作与验证见[维护指南](../../assets/维护指南.md)。

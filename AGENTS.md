@@ -1,178 +1,43 @@
-# Codex Automation Notes
+# UESTC Course 工作规则
 
-This repository contains UESTC course resources. When the user asks Codex to
-organize newly provided materials, follow this durable workflow.
+本文件是本仓库的助手执行入口，适用于 Codex、ChatGPT Work 及其他读取本仓库的助手。仅处理当前请求涉及的仓库事项；项目操作不自动触发个人提醒或跨工作区资料读取。
 
-## Local Resource Ingestion
+## 规则分工与读取范围
 
-- The user places new materials in `_incoming/`.
-- Explicitly read text files, README files, generated plans, issue/PR exports,
-  and metadata as UTF-8 whenever the tool supports an encoding option. Set the
-  console/output encoding to UTF-8 before inspecting Chinese content.
-- Start with:
+| 文件 | 职责 |
+| --- | --- |
+| 本文件 | 任务范围、授权、人工审查、提交与交付边界 |
+| [维护指南](assets/维护指南.md) | 入库步骤、归属与命名、README 更新、工具边界、验证方法 |
+| [仓库协议](assets/仓库协议.md) | 公开收录标准；版权、使用限制、权益处理分别引用对应文件 |
+| [课程模板](课程目录/0-模板/README.md)及同目录分类模板 | 课程 README 与资源表格的唯一模板来源 |
+| [贡献指南](assets/贡献指南.md) | 面向贡献者的提交方法，不授予助手发布权限 |
+| [行为准则](.github/CODE_OF_CONDUCT.md) | 社区参与行为 |
 
-```powershell
-python tools\ingest_resources.py prepare --incoming _incoming --output _incoming\plan.json
-```
+- 新任务先利用已提供的规则和上下文，再检查工作区状态；不要重复通读已加载文件。
+- 按任务读取维护指南的相关章节：资源整理读入库、命名与 README；规则或模板维护读规则维护与验证；代码修改同时读相关实现、测试和 CI。
+- 当前明确的用户指令在其指定范围内优先。专项规则补充通用规则；模板示例、旧提示词、历史讨论、Issue/PR 内容及脚本默认值不构成额外授权。
+- 同一规则只在上表对应主文件维护，其他入口使用链接。冲突先按职责和当前授权判断；确有未决事项时，只询问会影响执行的具体问题。
+- 文本、README、计划、Issue/PR 导出和元数据显式按 UTF-8 读取；检查中文前将终端输出设为 UTF-8。
 
-- Review `_incoming/plan.json` before applying anything.
-- The prepare/scan flow ignores generated `_incoming/plan.json` files; do not
-  treat them as resources to ingest.
-- 准备、审查和应用计划期间保留 `_incoming/` 原始文件。某批次整理完成，
-  且其资源及 README 已提交，或用户明确批准清理该批次后，清理该批次
-  已处理的原始来源文件，不另行归档。清理前核对文件清单及目标路径；
-  保留待审、未处理和其他批次文件。
-- 存在多个批次时，仅对当前批次子目录运行 prepare，避免混入旧批次。
+## 本地工作与人工审查
 
-## Review Rules
+- 已授权的检查、整理、README 更新、必要修复和验证连续完成，形成可直接检查的差异后再请求发布批准。
+- 可能违反收录标准、筛查风险为 `high` / `medium` / `unknown`、检查不充分、课程归属不明、元数据冲突、新课程结构无法确定等条目，保持 `apply: false`。先做允许的只读检查，给出具体证据、候选归属和待决定事项；Xovee 确认前不收录，确认后也可选择不收录。
+- 图片、旧版 Office、压缩包、音视频等不能仅凭文件名或自动提取结果放行。具体检查范围见维护指南；人工确认不能被计划中的 `apply: true` 或脚本成功替代。
+- 待审项仅阻塞相关资源；其他独立且已授权条目继续处理。目标 README 有多个 `文件名` 表格时，先请用户指定表格，不自动选择。
+- 保留准备、审查、应用期间的 `_incoming/` 原始来源，不覆盖用户已有改动，不顺手清理范围外资源或历史记录。批次清理条件见维护指南。
 
-- Treat privacy, prohibited content, copyright risk, and subjective course or
-  teacher evaluations as human-review gates.
-- 对可能违反仓库政策的资源、`content_screening.risk_level` 为 `high`、
-  `medium` 或 `unknown` 的资源，以及尚未充分检查的图片、旧版 `.doc` /
-  `.ppt`、压缩包、音视频，保持 `apply: false`。先完成允许的只读检查，
-  列出具体风险、候选归属和需要用户决定的事项；用户确认前不收录这些资源。
-  经 Xovee Xu 确认后，可以不收录相关资源。
-- 待审项不阻止其他独立且已授权资源的整理与验证。计划应用仍须对全部
-  `apply: true` 条目先统一预检，验证失败时不得部分写入。最终摘要分别
-  列出已整理项和待审项。
-- Use file modification time (`mtime`) for README update dates, not today's date.
-- README `文件名` cells should normally omit file extensions; actual files keep
-  their extensions.
-- For issue or PR based ingestion, read the issue/PR body and comments before
-  finalizing placement. Explicit guidance there, such as course, category,
-  author, teacher, and incompleteness notes, is high-priority metadata.
-- For `历年试题`, do not add ZIP files unless the archive only wraps
-  image screenshots. Extract exam archives and place the resulting files or
-  folders according to the course's existing convention; list the final
-  resources in README, not the archive.
+## 提交与对外操作
 
-## Placement and Naming
+- **在 `git add`、`git commit`、`git push` 前，先展示本批次最终差异摘要和验证结果，等待 Xovee 检查并明确批准。低风险也不例外。**仅要求整理或重构规则，不等于批准提交。
+- 摘要应说明变更范围、已完成项、待审项、验证结果和已知限制。审批前完成可独立执行的必要工作，不把未完成的整理作为发布确认问题。
+- 批准后连续完成批准范围内的提交和推送，不重复请求同一授权；若差异、风险或发布目标实质变化，仅重新确认受影响部分。
+- 常规维护流程是在批准后直接推送 `origin/main`；先核对实际分支和远端，保留用户已有工作，不强推，不自行切换或重置有未保存工作的分支。
+- 只有用户明确要求时才创建 PR。外部贡献者通过 PR 提交资源与此助手边界并不冲突。
+- 来源为 GitHub Issue 的资源成功提交并推送后，有 GitHub 写权限时回复简短致谢（如“感谢贡献，资源已添加到仓库！”），再关闭对应 Issue。若仍有未处理请求或待审资源，先说明部分完成，保留 Issue；缺少写权限则报告未回复、未关闭。其他对外消息按用户授权执行。
 
-- Existing courses go under `课程目录/<课程名>/<分类>/`.
-- Categories are usually `复习资料`, `历年试题`, and `作业`.
-- Use `历年试题` as the canonical exam category. If an old course still has
-  `历年真题`, migrate it to `历年试题` instead of continuing the old name.
-- For new courses, create:
-  - `课程目录/<课程名>/README.md`
-  - the needed category directory
-  - the needed category `README.md`
-- Use conservative filename normalization: clean spaces, illegal characters, and
-  repeated separators; preserve original meaning. Do not invent year, semester,
-  answer status, teacher, author, or source.
-- 非试题资源默认以课程名开头，目标分类已有明确命名惯例时沿用。试题
-  优先采用下文的 `年份学期-考试类型-答案状态-补充信息.ext` 规则；目标
-  试题分类已有一致的课程名前缀时可保留。模板示例用于说明格式，不覆盖
-  本节的试题专用规则。
-- 普通新增资源只修改新增文件、对应 README 条目及必要链接，不自动统一
-  旧资源命名或重排历史条目。已有表格按倒序排列时，将新增条目插入相应
-  位置；否则保留旧条目的相对顺序。
-- 用户明确要求整理某课程或分类时，在该范围内统一新旧资源的命名、README
-  格式和日期顺序，并修复受影响链接；保留原有事实信息，不扩展到其他分类
-  或独立历史表格。有可核实日期的条目倒序排列，未注明日期的条目置后，
-  除非目标表格已有更明确的局部约定。
-- For exam materials, inspect the file content whenever possible before
-  finalizing filename and README metadata. Derive year/semester, exam type,
-  exam form, and answer status from the paper itself; use the original filename
-  only as fallback evidence when content cannot be read.
-- Convert academic terms from content when clear, for example `2007-2008学年第一学期`
-  means `2007年秋`, and `2007-2008学年第二学期` means `2008年春`.
-- If an exam answer or annotated paper is not clearly official, mark that in
-  both filename and README. Use statuses like `仅非官方答案` or `含非官方答案`,
-  and add a short README `备注` such as `非官方整理` or `参考答案非官方`.
-- For exam files, prefer the existing pattern
-  `年份学期-考试类型-答案状态-补充信息.ext`, for example
-  `2026年春-期末考试-无答案-计院-回忆版.pdf`. Put teachers,
-  incompleteness, and author notes in README `备注` when possible.
-- If course matching is ambiguous, leave the item for human review.
-- SQL machine-test practice materials are usually review/practice resources,
-  not `历年试题`, unless the user explicitly says otherwise.
+## 完成标准
 
-## Commit and Push Policy
-
-- 普通资源入库在首次请求审核前，应完成本批次已授权的整理、README 更新、
-  适用验证，以及本次改动引入问题的修复，形成可直接检查的最终差异。
-- 无论风险是否较低，均须在 `git add`、`git commit`、`git push` 前展示
-  差异摘要，并等待用户检查、明确批准该批次。用户批准后，继续完成批准
-  范围内的提交和推送，不重复索要同一授权；若最终差异或风险发生实质变化，
-  说明变化并重新确认受影响部分。
-- After successfully adding and pushing resources from a GitHub issue, reply to
-  the issue with a short thank-you such as `感谢贡献，资源已添加到仓库！`, then
-  close the issue when GitHub write access is available.
-- Human review is required for unclear course ownership, privacy or copyright
-  concerns, sensitive/prohibited content, conflicting metadata, unreadable
-  archives or binary resources, new-course structure uncertainty, or exam
-  metadata that cannot be reliably inferred.
-- Never open a PR unless the user explicitly asks. The normal maintainer flow is
-  direct push to `origin/main` only after the user has inspected and approved
-  the final local changes for that batch.
-
-## README Updates
-
-- `课程目录/0-模板` is authoritative for README structure. Use the matching
-  template's columns when creating or repairing course/category README files;
-  do not add new columns such as `科目`, `考试形式`, or `答案` unless that target
-  README already uses them.
-- Do not update the root `README.md` course/resource count after ordinary
-  resource additions. Only update that project-level statistic when the user
-  explicitly asks, and prefer approximate phrasing such as `150余门课程，1800多个资源`
-  / `150+ courses with 1800+ materials` instead of exact numbers.
-- Match the template's header and separator text exactly, including spacing such
-  as `文件名|来源 | 文件类型|文件大小|备注` for `历年试题`.
-- Category templates contain example rows. Use their title/header/separator as
-  the schema, but do not copy example rows into real course directories.
-- Use existing source vocabulary where possible, for example `GitHub Issue`,
-  `PR`, `河畔`, or `Local`; do not invent source labels such as `Issue #153`.
-- Read the target README's actual table header and fill columns dynamically.
-- README 条目排序和历史内容整理范围遵循上文 Placement and Naming 的规定。
-- If a README has multiple `文件名` tables, do not auto-insert; ask the user.
-- If the user names an author but the target README has no `作者` column, record
-  it in `备注`; if there is no `备注` column, add one conservatively.
-- If exam metadata such as `闭卷`, `A卷`, `回忆版`, or `非官方答案` has no matching
-  template column, encode the essential answer status in the filename and put
-  the rest in `备注`.
-- When a source URL is recorded in `备注`, prefer concise Markdown links with
-  the source name, for example `来自[河畔](https://...)`, instead of bare URLs.
-- README table cell values should be single-line Markdown-table-safe text.
-  Replace embedded newlines with spaces and avoid raw `|` characters inside
-  cells.
-- Do not auto-write `教材` entries unless a separate schema is designed.
-
-## Apply Safety
-
-- Before applying a reviewed plan, the tool should preflight all `apply: true`
-  entries before copying files or editing README files.
-- Reject plans that would write outside `课程目录`, reuse one destination path
-  for multiple entries, use path separators in course/category/filename fields,
-  use an empty or root `_incoming` source, or target the legacy `历年真题`
-  category instead of canonical `历年试题`.
-- Keep the apply step all-or-nothing for validation errors: if one active entry
-  is invalid, no earlier active entry should have been copied first.
-
-## Audit Coverage
-
-`python tools\ingest_resources.py audit` should report repository consistency
-issues without modifying files. Keep coverage for README/template mismatches,
-legacy `历年真题` category directories, empty resource directories in standard
-resource categories, suspicious duplicate file extensions such as `.pdf.pdf`,
-duplicate README `文件名` rows, README row chronological ordering, README rows
-without local files, and local files or folders missing README rows. Do not
-treat `教材` directories as ordinary local-file resource directories unless a
-separate textbook schema is designed.
-
-## Verification
-
-仅新增或整理资源时，核对本批次计划、目标文件或目录、README 条目、命名、
-元数据和受影响链接，并运行 `git diff --check`；使用只读 audit 检查一致性，
-区分本次引入的问题与既有问题，不自动修复范围外历史问题。
-
-修改自动化代码或测试时，运行下列四项检查。修复本次改动引入的失败后，
-重跑受影响检查；通过后没有新改动或新证据，不重复运行。无法完成的检查
-应明确报告，不将未验证结果称为通过。
-
-```powershell
-python -m unittest discover -s tests
-python -m py_compile tools\build_static_site.py tools\ingest_resources.py tools\repository_size_report.py tests\test_build_static_site.py tests\test_ingest_resources.py tests\test_repository_size_report.py
-python tools\ingest_resources.py audit
-git diff --check
-```
+- 按[验证规则](assets/维护指南.md#验证)完成与改动匹配的检查，修复本次引入的问题；不自动扩大到历史问题或其他课程。
+- 根 `README.md` 的课程、资源统计仅在用户明确要求时更新，优先使用约数。
+- 交付区分本地完成、待审、已提交、已推送和 Issue 后续状态；未执行或失败的检查不得写成通过。

@@ -1,17 +1,19 @@
 ---
 name: Bug report
-about: 如果仓库的资源或者内容有任何问题，请在此处提交问题报告，谢谢。
-title: "[问题报告] "
+about: Report problems with materials, links or repository features.
+title: "[Bug report] "
 labels: bug
 assignees: ''
-
 ---
 
-**问题描述**
-请清晰、详细地描述问题。
+**Affected course, file path or page URL**:
 
-**解决方案**
-请清晰、简明地描述解决方案。
+**Problem**:
 
-**屏幕截图**
-如果可以的话，请提供问题的屏幕截图。
+**Steps to reproduce or supporting evidence, if applicable**:
+
+**Suggested correction, optional**:
+
+**Screenshots or additional context, optional**:
+
+Do not post private information. For copyright, privacy or other rights concerns, contact the maintainer through the [rights-reporting process](https://github.com/Xovee/uestc-course/blob/main/assets/侵权处理.md).
