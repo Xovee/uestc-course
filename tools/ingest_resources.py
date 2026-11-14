@@ -197,7 +197,7 @@ def clean_name_part(value: str) -> str:
     return value.strip("-. ")
 
 
-def normalize_resource_filename(source: Path, course: str | None) -> str:
+def normalize_resource_filename(source: Path, course: str | None, category: str | None = None) -> str:
     if source.is_dir():
         suffix = ""
         stem = source.name
@@ -207,6 +207,20 @@ def normalize_resource_filename(source: Path, course: str | None) -> str:
     clean_stem = clean_name_part(stem)
     if course:
         clean_course = clean_name_part(course)
+        if category == CATEGORY_EXAMS:
+            exam_stem = clean_stem.removeprefix(f"{clean_course}-")
+            date_match = re.match(
+                rf"(?P<date>(?:19|20)\d{{2}}(?:年[{TERM_TOKEN_PATTERN}]?|[{TERM_TOKEN_PATTERN}])|时间不明)(?:-|$)",
+                exam_stem,
+            )
+            if date_match:
+                detail = exam_stem[date_match.end():]
+                if detail == clean_course:
+                    detail = ""
+                else:
+                    detail = detail.removeprefix(f"{clean_course}-")
+                clean_stem = "-".join(part for part in (date_match["date"], clean_course, detail) if part)
+                return f"{clean_stem}{suffix}"
         normalized_stem = normalize_for_match(clean_stem)
         normalized_course = normalize_for_match(clean_course)
         if normalized_course and not normalized_stem.startswith(normalized_course):
@@ -495,7 +509,7 @@ def build_entry(source: Path, incoming: Path, repo_root: Path, courses: list[str
     warnings = list(course_match.warnings)
 
     course_for_filename = course_match.course or (proposed_new_course if prepare else None)
-    destination_filename = normalize_resource_filename(source, course_for_filename) if prepare else source.name
+    destination_filename = normalize_resource_filename(source, course_for_filename, category) if prepare else source.name
     display_name = destination_filename if source.is_dir() else Path(destination_filename).stem
     destination_path = None
     status = "ready"

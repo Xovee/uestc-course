@@ -489,6 +489,41 @@ class IngestResourcesTest(unittest.TestCase):
         self.assertEqual(entry["content_screening"]["risk_level"], "low")
         self.assertTrue(entry["apply"])
 
+    def test_prepare_places_exam_course_after_date_and_keeps_review_required(self) -> None:
+        self.make_course("图论", "历年试题")
+        cases = {
+            "图论-2012年春-期末考试-无答案.txt": "2012年春-图论-期末考试-无答案.txt",
+            "2012年春-图论-期末考试-无答案.txt": "2012年春-图论-期末考试-无答案.txt",
+            "图论-2012年-期末考试-无答案.txt": "2012年-图论-期末考试-无答案.txt",
+            "图论-时间不明-期末考试-无答案.txt": "时间不明-图论-期末考试-无答案.txt",
+            "图论-2026年秋-无答案-不完整回忆版试题.txt": "2026年秋-图论-无答案-不完整回忆版试题.txt",
+            "图论-2007-2008学年第一学期-期末考试.txt": "图论-2007-2008学年第一学期-期末考试.txt",
+        }
+        for name, expected in cases.items():
+            with self.subTest(name=name):
+                source = self.touch_text(name, "回忆版试题，无答案")
+                entry = ingest.prepare_resources(self.incoming, self.repo)["entries"][0]
+                self.assertEqual(entry["destination"]["category"], "历年试题")
+                self.assertEqual(entry["destination"]["filename"], expected)
+                self.assertEqual(entry["metadata"]["display_name"], Path(expected).stem)
+                self.assertFalse(entry["apply"])
+                self.assertIn("exam_metadata_requires_content_review", entry["warnings"])
+                self.assertTrue(source.exists())
+                source.unlink()
+
+    def test_prepare_detects_conflict_after_exam_course_reordering(self) -> None:
+        category_dir = self.make_course("图论", "历年试题")
+        existing = category_dir / "2012年春-图论-期末考试-无答案.txt"
+        existing.write_text("已有试题", encoding="utf-8")
+        self.touch_text("图论-2012年春-期末考试-无答案.txt", "新增候选")
+
+        entry = ingest.prepare_resources(self.incoming, self.repo)["entries"][0]
+
+        self.assertEqual(entry["destination"]["filename"], existing.name)
+        self.assertFalse(entry["apply"])
+        self.assertIn("destination_file_exists", entry["warnings"])
+        self.assertEqual(existing.read_text(encoding="utf-8"), "已有试题")
+
     def test_prepare_ignores_generated_plan_file(self) -> None:
         self.make_course(
             "网络计算模式",
