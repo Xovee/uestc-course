@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "course_count": 156,
-  "resource_count": 1248,
+  "resource_count": 1249,
   "categories": [
     "复习资料",
     "历年试题",
@@ -1260,10 +1260,10 @@
     {
       "name": "现代电子技术综合实验",
       "path": "课程目录/现代电子技术综合实验",
-      "resource_count": 4,
+      "resource_count": 5,
       "category_counts": {
         "复习资料": 0,
-        "历年试题": 2,
+        "历年试题": 3,
         "作业": 2,
         "教材": 0
       },
@@ -10704,6 +10704,20 @@
       "file_size": "535 B",
       "updated_at": "",
       "remark": "DDS 方向序列发生器题的考后回忆（作者：摘一裙山茶）。发帖人在回复中注明任课教师是李颖。考试时间和具体类型待确认。"
+    },
+    {
+      "course": "现代电子技术综合实验",
+      "category": "历年试题",
+      "name": "时间不明-现代电子技术综合实验-无答案-传感器方向回忆版",
+      "path": "课程目录/现代电子技术综合实验/历年试题/时间不明-现代电子技术综合实验-无答案-传感器方向回忆版.txt",
+      "url": "https://github.com/Xovee/uestc-course/blob/main/%E8%AF%BE%E7%A8%8B%E7%9B%AE%E5%BD%95/%E7%8E%B0%E4%BB%A3%E7%94%B5%E5%AD%90%E6%8A%80%E6%9C%AF%E7%BB%BC%E5%90%88%E5%AE%9E%E9%AA%8C/%E5%8E%86%E5%B9%B4%E8%AF%95%E9%A2%98/%E6%97%B6%E9%97%B4%E4%B8%8D%E6%98%8E-%E7%8E%B0%E4%BB%A3%E7%94%B5%E5%AD%90%E6%8A%80%E6%9C%AF%E7%BB%BC%E5%90%88%E5%AE%9E%E9%AA%8C-%E6%97%A0%E7%AD%94%E6%A1%88-%E4%BC%A0%E6%84%9F%E5%99%A8%E6%96%B9%E5%90%91%E5%9B%9E%E5%BF%86%E7%89%88.txt",
+      "is_local": true,
+      "source": "河畔",
+      "author": "",
+      "file_type": "Text",
+      "file_size": "415 B",
+      "updated_at": "",
+      "remark": "传感器方向的考题回忆（作者：striving鼠鼠）。涉及光敏启动、光报警、PWM 调光和倒计时等要求。"
     },
     {
       "course": "现代电子技术综合实验",
