@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "course_count": 156,
-  "resource_count": 1252,
+  "course_count": 157,
+  "resource_count": 1253,
   "categories": [
     "复习资料",
     "历年试题",
@@ -450,6 +450,19 @@
       },
       "github_url": "https://github.com/Xovee/uestc-course/blob/main/%E8%AF%BE%E7%A8%8B%E7%9B%AE%E5%BD%95/%E5%8D%8A%E5%AF%BC%E4%BD%93%E7%89%A9%E7%90%86",
       "download_url": "https://xovee.github.io/gitzip/?https://github.com/Xovee/uestc-course/tree/main/%E8%AF%BE%E7%A8%8B%E7%9B%AE%E5%BD%95/%E5%8D%8A%E5%AF%BC%E4%BD%93%E7%89%A9%E7%90%86"
+    },
+    {
+      "name": "博士生综合考试（物理学院）",
+      "path": "课程目录/博士生综合考试（物理学院）",
+      "resource_count": 1,
+      "category_counts": {
+        "复习资料": 0,
+        "历年试题": 1,
+        "作业": 0,
+        "教材": 0
+      },
+      "github_url": "https://github.com/Xovee/uestc-course/blob/main/%E8%AF%BE%E7%A8%8B%E7%9B%AE%E5%BD%95/%E5%8D%9A%E5%A3%AB%E7%94%9F%E7%BB%BC%E5%90%88%E8%80%83%E8%AF%95%EF%BC%88%E7%89%A9%E7%90%86%E5%AD%A6%E9%99%A2%EF%BC%89",
+      "download_url": "https://xovee.github.io/gitzip/?https://github.com/Xovee/uestc-course/tree/main/%E8%AF%BE%E7%A8%8B%E7%9B%AE%E5%BD%95/%E5%8D%9A%E5%A3%AB%E7%94%9F%E7%BB%BC%E5%90%88%E8%80%83%E8%AF%95%EF%BC%88%E7%89%A9%E7%90%86%E5%AD%A6%E9%99%A2%EF%BC%89"
     },
     {
       "name": "博士研究生英语",
@@ -4530,6 +4543,20 @@
       "file_size": "732 KB",
       "updated_at": "",
       "remark": "作业类型：习题"
+    },
+    {
+      "course": "博士生综合考试（物理学院）",
+      "category": "历年试题",
+      "name": "2026年-博士生综合考试（物理学院）-笔试-无答案-无线电物理方向回忆版",
+      "path": "课程目录/博士生综合考试（物理学院）/历年试题/2026年-博士生综合考试（物理学院）-笔试-无答案-无线电物理方向回忆版.txt",
+      "url": "https://github.com/Xovee/uestc-course/blob/main/%E8%AF%BE%E7%A8%8B%E7%9B%AE%E5%BD%95/%E5%8D%9A%E5%A3%AB%E7%94%9F%E7%BB%BC%E5%90%88%E8%80%83%E8%AF%95%EF%BC%88%E7%89%A9%E7%90%86%E5%AD%A6%E9%99%A2%EF%BC%89/%E5%8E%86%E5%B9%B4%E8%AF%95%E9%A2%98/2026%E5%B9%B4-%E5%8D%9A%E5%A3%AB%E7%94%9F%E7%BB%BC%E5%90%88%E8%80%83%E8%AF%95%EF%BC%88%E7%89%A9%E7%90%86%E5%AD%A6%E9%99%A2%EF%BC%89-%E7%AC%94%E8%AF%95-%E6%97%A0%E7%AD%94%E6%A1%88-%E6%97%A0%E7%BA%BF%E7%94%B5%E7%89%A9%E7%90%86%E6%96%B9%E5%90%91%E5%9B%9E%E5%BF%86%E7%89%88.txt",
+      "is_local": true,
+      "source": "河畔",
+      "author": "",
+      "file_type": "Text",
+      "file_size": "1.4 KB",
+      "updated_at": "",
+      "remark": "作者：长至z。楼主在回帖中提到本次笔试为开卷。全反射和等效原理两题仅记考点。"
     },
     {
       "course": "博士研究生英语",
