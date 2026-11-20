@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "course_count": 157,
-  "resource_count": 1253,
+  "course_count": 158,
+  "resource_count": 1255,
   "categories": [
     "复习资料",
     "历年试题",
@@ -818,10 +818,10 @@
     {
       "name": "微积分",
       "path": "课程目录/微积分",
-      "resource_count": 10,
+      "resource_count": 11,
       "category_counts": {
         "复习资料": 5,
-        "历年试题": 5,
+        "历年试题": 6,
         "作业": 0,
         "教材": 0
       },
@@ -944,6 +944,19 @@
       },
       "github_url": "https://github.com/Xovee/uestc-course/blob/main/%E8%AF%BE%E7%A8%8B%E7%9B%AE%E5%BD%95/%E6%95%B0%E5%AD%97%E7%94%B5%E8%B7%AF",
       "download_url": "https://xovee.github.io/gitzip/?https://github.com/Xovee/uestc-course/tree/main/%E8%AF%BE%E7%A8%8B%E7%9B%AE%E5%BD%95/%E6%95%B0%E5%AD%97%E7%94%B5%E8%B7%AF"
+    },
+    {
+      "name": "数字系统实验Ⅱ",
+      "path": "课程目录/数字系统实验Ⅱ",
+      "resource_count": 1,
+      "category_counts": {
+        "复习资料": 1,
+        "历年试题": 0,
+        "作业": 0,
+        "教材": 0
+      },
+      "github_url": "https://github.com/Xovee/uestc-course/blob/main/%E8%AF%BE%E7%A8%8B%E7%9B%AE%E5%BD%95/%E6%95%B0%E5%AD%97%E7%B3%BB%E7%BB%9F%E5%AE%9E%E9%AA%8C%E2%85%A1",
+      "download_url": "https://xovee.github.io/gitzip/?https://github.com/Xovee/uestc-course/tree/main/%E8%AF%BE%E7%A8%8B%E7%9B%AE%E5%BD%95/%E6%95%B0%E5%AD%97%E7%B3%BB%E7%BB%9F%E5%AE%9E%E9%AA%8C%E2%85%A1"
     },
     {
       "name": "数字逻辑",
@@ -7263,6 +7276,20 @@
     {
       "course": "微积分",
       "category": "历年试题",
+      "name": "2025年秋-微积分-期中考试-含非官方答案",
+      "path": "课程目录/微积分/历年试题/2025年秋-微积分-期中考试-含非官方答案.pdf",
+      "url": "https://github.com/Xovee/uestc-course/blob/main/%E8%AF%BE%E7%A8%8B%E7%9B%AE%E5%BD%95/%E5%BE%AE%E7%A7%AF%E5%88%86/%E5%8E%86%E5%B9%B4%E8%AF%95%E9%A2%98/2025%E5%B9%B4%E7%A7%8B-%E5%BE%AE%E7%A7%AF%E5%88%86-%E6%9C%9F%E4%B8%AD%E8%80%83%E8%AF%95-%E5%90%AB%E9%9D%9E%E5%AE%98%E6%96%B9%E7%AD%94%E6%A1%88.pdf",
+      "is_local": true,
+      "source": "河畔",
+      "author": "",
+      "file_type": "PDF",
+      "file_size": "244.1 KB",
+      "updated_at": "",
+      "remark": "微积分Ⅰ期中参考答案，含题干及解答，未附评分标准。答案来源未注明，按非官方参考答案标注。第五大题见下方勘误。"
+    },
+    {
+      "course": "微积分",
+      "category": "历年试题",
       "name": "时间不明-微积分-期末考试-无答案-2008级",
       "path": "课程目录/微积分/历年试题/时间不明-微积分-期末考试-无答案-2008级.pdf",
       "url": "https://github.com/Xovee/uestc-course/blob/main/%E8%AF%BE%E7%A8%8B%E7%9B%AE%E5%BD%95/%E5%BE%AE%E7%A7%AF%E5%88%86/%E5%8E%86%E5%B9%B4%E8%AF%95%E9%A2%98/%E6%97%B6%E9%97%B4%E4%B8%8D%E6%98%8E-%E5%BE%AE%E7%A7%AF%E5%88%86-%E6%9C%9F%E6%9C%AB%E8%80%83%E8%AF%95-%E6%97%A0%E7%AD%94%E6%A1%88-2008%E7%BA%A7.pdf",
@@ -8463,6 +8490,20 @@
       "file_size": "1.0 MB",
       "updated_at": "",
       "remark": "科目：数字逻辑设计及应用；答案：无答案"
+    },
+    {
+      "course": "数字系统实验Ⅱ",
+      "category": "复习资料",
+      "name": "数字系统实验Ⅱ-电梯项目期末验收回忆",
+      "path": "课程目录/数字系统实验Ⅱ/复习资料/数字系统实验Ⅱ-电梯项目期末验收回忆.txt",
+      "url": "https://github.com/Xovee/uestc-course/blob/main/%E8%AF%BE%E7%A8%8B%E7%9B%AE%E5%BD%95/%E6%95%B0%E5%AD%97%E7%B3%BB%E7%BB%9F%E5%AE%9E%E9%AA%8C%E2%85%A1/%E5%A4%8D%E4%B9%A0%E8%B5%84%E6%96%99/%E6%95%B0%E5%AD%97%E7%B3%BB%E7%BB%9F%E5%AE%9E%E9%AA%8C%E2%85%A1-%E7%94%B5%E6%A2%AF%E9%A1%B9%E7%9B%AE%E6%9C%9F%E6%9C%AB%E9%AA%8C%E6%94%B6%E5%9B%9E%E5%BF%86.txt",
+      "is_local": true,
+      "source": "河畔",
+      "author": "3.26.1",
+      "file_type": "Text",
+      "file_size": "522 B",
+      "updated_at": "",
+      "remark": "整理自 2026 年 10 月 28 日的河畔回帖，含模块功能和行列扫描设置两项验收问题。"
     },
     {
       "course": "数字逻辑",
